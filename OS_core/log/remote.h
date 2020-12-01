@@ -19,8 +19,13 @@
 #include <winsock2.h>
 #include <windows.h>
 #include <stdlib.h>
+
 #include "structure.h"
 #include "local.h"
+#include <WinSock2.h>
+
+#pragma comment(lib,"ws2_32.lib")
+#pragma comment( lib,"winmm.lib" )
 
 struct _core_log_remote_event{
     struct _core_log_struct* data;
@@ -38,12 +43,13 @@ void _core_log_remote_event_done();
 
 struct _core_log_remote_event* message_list = 0;
 unsigned int message_count = 0;
-HANDLE list_mutex;
+HANDLE list_mutex, exit_mutex;
+int exit_flag = 0, client_flag = 0;
 
 int _core_log_remote_init(){
     WORD sockVersion = MAKEWORD(2, 2);
     WSADATA wsaData;
-    struct _core_log_date* tmp_date
+    struct _core_log_date* tmp_date;
     if(WSAStartup(sockVersion, &wsaData) != 0) return -1;
 
     //------------------------------init socket------------------------------------
@@ -81,9 +87,48 @@ int _core_log_remote_init(){
     //-------------------------------socket inited-------------------------------------
 
     list_mutex = CreateMutex(0,0,0);
+    exit_mutex = CreateMutex(0,0,0);
     //start service thread
     remote_info.service = CreateThread(NULL, 0, _core_log_remote_service_thread, NULL, 0, NULL);
+
+
+    //TODO: remote bridge server connection
     return 0;
+}
+
+int _core_log_remote_service_stop(){    //if timeout return -1  (default 20s)
+    //if (client_flag)CloseHandle(remote_info.service);
+    if(WaitForSingleObject(exit_mutex, 20000) == WAIT_TIMEOUT){
+        return -1;
+    }else{
+        DWORD start_t = timeGetTime();
+        while(!exit_flag){
+            Sleep(200);
+            if(timeGetTime() - start_t > 20000){
+                ReleaseMutex(exit_mutex);
+                return -1;
+            }
+        }
+        exit_flag = 0;
+    }
+    return 0;
+}
+
+bool IsSocketClosed(SOCKET clientSocket)
+{
+    bool ret = false;
+    HANDLE closeEvent = WSACreateEvent();
+    WSAEventSelect(clientSocket, closeEvent, FD_CLOSE);
+
+    DWORD dwRet = WaitForSingleObject(closeEvent, 0);
+
+    if (dwRet == WSA_WAIT_EVENT_0)
+        ret = true;
+    else if (dwRet == WSA_WAIT_TIMEOUT)
+        ret = false;
+
+    WSACloseEvent(closeEvent);
+    return ret;
 }
 
 DWORD WINAPI _core_log_remote_service_thread(LPVOID lpParam){
@@ -91,8 +136,7 @@ DWORD WINAPI _core_log_remote_service_thread(LPVOID lpParam){
     struct sockaddr_in remoteAddr;
     int nAddrlen = sizeof(remoteAddr);
 
-    struct tcp_info info;
-    int if_len = sizeof(info);
+    //TODO: heart pack thread
     struct _core_log_date* date_tmp = 0;
 
     while(true){    //always waiting for client
@@ -117,6 +161,18 @@ DWORD WINAPI _core_log_remote_service_thread(LPVOID lpParam){
             send_tmp = (char*)malloc(LOG_MAX_DETAILS_LEN);
         }
 
+        if(WaitForSingleObject(exit_mutex, 200) == WAIT_TIMEOUT){       //if stop signal when accept client
+            if(remote_info.log_server != INVALID_SOCKET)closesocket(remote_info.log_server);
+            remote_info.log_server = INVALID_SOCKET;
+            remote_info.service = 0;
+            free(send_tmp);
+            exit_flag = 1;
+            return 0;
+        }else{
+            ReleaseMutex(exit_mutex);
+        }
+
+        client_flag = 0;
         sClient = accept(remote_info.log_server, (SOCKADDR * ) & remoteAddr, &nAddrlen);   //waiting for client
 
         while(true){
@@ -124,16 +180,23 @@ DWORD WINAPI _core_log_remote_service_thread(LPVOID lpParam){
                 Sleep(400);
                 continue;
             }
-            getsockopt(sClient, IPPROTO_TCP, TCP_INFO, &info, (socklen_t *)&len);
-            if(info.tcpi_state!=TCP_ESTABLISHED){       //client was disconnect
-                date_tmp = _core_log_get_time();
-                tmp_log_id = _core_log_append(LOG_REMOTE_DISCONNECT_DATA, date_tmp);
-                _core_log_local_write(_core_log_get_by_id(tmp_log_id));
-                if(date_tmp){
-                    free(date_tmp);
-                    date_tmp = 0;
-                }
+            
+
+            if(WaitForSingleObject(exit_mutex, 200) == WAIT_TIMEOUT){       //if stop signal when linking
+                if(remote_info.log_server != INVALID_SOCKET)
+                    closesocket(remote_info.log_server);
+                if(sClient != INVALID_SOCKET)
+                    closesocket(sClient);
+                remote_info.log_server = INVALID_SOCKET;
+                remote_info.service = 0;
+                free(send_tmp);
+                exit_flag = 1;
+                return 0;
+            }else{
+                ReleaseMutex(exit_mutex);
             }
+
+            client_flag = 1;
             if(message_count > 0){      //do event list
                 if(send_tmp){
                     memset(send_tmp, 0, LOG_MAX_DETAILS_LEN);
@@ -142,11 +205,14 @@ DWORD WINAPI _core_log_remote_service_thread(LPVOID lpParam){
                     memcpy_s(&send_tmp[1],8,date_string_tmp,strnlen_s(date_string_tmp,8));
                     send_tmp[9] = ']';
                     memcpy_s(&send_tmp[10], LOG_MAX_DETAILS_LEN - 10, message_list->data->log_details, strnlen_s(message_list->data->log_details, LOG_MAX_DETAILS_LEN));
+                    send_tmp[strnlen_s(send_tmp, LOG_MAX_DETAILS_LEN)] = '\n';
                     send(sClient, send_tmp, strnlen_s(send_tmp, LOG_MAX_DETAILS_LEN), 0);
                     _core_log_remote_event_done();
+                    //debug
+                    //printf("Remote data was send.\n");
                 }
             }
-            //TODO: create message event list
+
         }
         if(send_tmp){
             free(send_tmp);
@@ -157,7 +223,10 @@ DWORD WINAPI _core_log_remote_service_thread(LPVOID lpParam){
 }
 
 void _core_log_remote_event_append(struct _core_log_struct* log_data){      //append a new event
-    if(!log_data)return;
+    if (!log_data) { 
+        //printf("remote event: nullptr.\n");
+        return; 
+    }
     WaitForSingleObject(list_mutex, INFINITE);
     struct _core_log_remote_event* tmp_event = (_core_log_remote_event*)malloc(sizeof(_core_log_remote_event));
     if(tmp_event){
@@ -165,6 +234,11 @@ void _core_log_remote_event_append(struct _core_log_struct* log_data){      //ap
         tmp_event->last = message_list;
         message_list = tmp_event;
         message_count++;
+        //debug
+        //printf("remote event added.\n");
+    }
+    else {
+        //printf("remote event adding failed.\n");
     }
     ReleaseMutex(list_mutex);
     return;

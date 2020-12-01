@@ -11,6 +11,7 @@
 #define LOG_DATA_BRACKET "["
 #define LOG_DATA_BRACKET_RIGHT "]"
 
+
 #include <time.h>
 #include <stdio.h>
 #include "structure.h"
@@ -36,11 +37,14 @@ int _core_log_local_init(){     //initialize local log sys, return -1 when sys h
 
     memcpy_s(tmp_filename, 36, "./core_", 7);
     memcpy_s(&tmp_filename[7], 20, tmp_date_string, strnlen_s(tmp_date_string, 20));
+    tmp_filename[26] = '\0';
     free(tmp_date);
     free(tmp_date_string);
 
+    //printf("log file: %s\n", tmp_filename);
     errno_t tmp_errno = fopen_s(&log_local_info.local, tmp_filename, "w+");
     if(tmp_errno)return -2;
+    if (!log_local_info.local) return -2;
 
     fseek(log_local_info.local, 0, SEEK_SET);
     fwrite("Log sys was inited in ", 22, 1, log_local_info.local);
