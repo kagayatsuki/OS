@@ -28,16 +28,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e7aeb3db-4a07-4729-b870-5e63b1e11f45" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/log/service_log.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.vs/OS_core/v16/.suo" beforeDir="false" afterPath="$PROJECT_DIR$/.vs/OS_core/v16/.suo" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.vs/OS_core/v16/Browse.VC.db" beforeDir="false" afterPath="$PROJECT_DIR$/.vs/OS_core/v16/Browse.VC.db" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.vs/ProjectSettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/.vs/ProjectSettings.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.vs/VSWorkspaceState.json" beforeDir="false" afterPath="$PROJECT_DIR$/.vs/VSWorkspaceState.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.vs/slnx.sqlite" beforeDir="false" afterPath="$PROJECT_DIR$/.vs/slnx.sqlite" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/log/local.h" beforeDir="false" afterPath="$PROJECT_DIR$/log/local.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/log/remote.h" beforeDir="false" afterPath="$PROJECT_DIR$/log/remote.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/log/structure.h" beforeDir="false" afterPath="$PROJECT_DIR$/log/structure.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.vs/OS_core/v16/.suo" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.vs/OS_core/v16/Browse.VC.db" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.vs/ProjectSettings.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.vs/VSWorkspaceState.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.vs/slnx.sqlite" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/OS_core.sln" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/OS_core.vcxproj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/OS_core.vcxproj.filters" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/OS_core.vcxproj.user" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -64,9 +64,9 @@
     <property name="settings.editor.selected.configurable" value="preferences.updates" />
   </component>
   <component name="RunManager">
-    <configuration default="true" type="GradleAppRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true">
+    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true">
       <method v="2">
-        <option name="com.jetbrains.cidr.cpp.gradle.execution.GradleNativeBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
   </component>
@@ -82,6 +82,7 @@
       <workItem from="1606731611810" duration="10793000" />
       <workItem from="1606744003204" duration="34000" />
       <workItem from="1606809997556" duration="6706000" />
+      <workItem from="1606834152171" duration="1860000" />
     </task>
     <servers />
   </component>
