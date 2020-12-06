@@ -17,6 +17,7 @@ int flag_log_service_running = 0;
     All failed return -1, local failed return 1, remote failed return 2, all done return 0 **/
 int _core_service_log_start(int arg_remote){
     //init local module:
+    _log_operate_mutex = CreateMutex(0,0,0);
     int tmp_init_local = _core_log_local_init();
     //init remote module:
     int tmp_init_remote = 0;
@@ -45,6 +46,7 @@ int _core_service_log_stop(){
     remote_close = _core_log_remote_service_stop();
     if(remote_close)return -1;
     _core_log_clean_all();
+    CloseHandle(_log_operate_mutex);
     return 0;
 }
 

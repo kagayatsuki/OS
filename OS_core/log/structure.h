@@ -12,6 +12,7 @@
 #include <time.h>
 #include <math.h>
 #include <errno.h>
+#include <windows.h>
 
 #ifndef nullptr
 #define nullptr 0
@@ -59,6 +60,7 @@ struct _core_log		//log list structure
 
 struct _core_log* _var_log_list = nullptr;
 unsigned int _var_log_count = 0, _var_log_id = 0;
+HANDLE _log_operate_mutex;
 
 _core_log* _core_log_get_first(){   //for free first log data when appending new log that log count bigger than max
     if(!_var_log_list)return nullptr;
@@ -98,7 +100,7 @@ unsigned int _core_log_append(char* log_details, _core_log_date* log_date) {    
     if (tmp_link->log_struct->log_date && log_date) //log date can be null that for bad alloc sometime
         memcpy_s(tmp_link->log_struct->log_date, sizeof(_core_log_date), log_date, sizeof(_core_log_date));
 	
-    
+    WaitForSingleObject(_log_operate_mutex, INFINITE);
     //set link list
 	if(_var_log_list){  //is it first?
 	    if(_var_log_count + 1 > LOG_MAX_LIMIT){ //log count will bigger than max, free the first
@@ -120,6 +122,7 @@ unsigned int _core_log_append(char* log_details, _core_log_date* log_date) {    
 	}
     _var_log_list = tmp_link;
 	_var_log_id++;
+	ReleaseMutex(_log_operate_mutex);
 	return tmp_link->log_id;
 }
 

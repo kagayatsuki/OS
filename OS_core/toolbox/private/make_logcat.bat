@@ -1,0 +1,1 @@
+g++ .\OS_logcat.cpp -o .\logcat.exe -lwsock32

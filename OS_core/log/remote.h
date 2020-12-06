@@ -15,6 +15,9 @@
 #define LOG_REMOTE_WAITING_DATA "remote@log module: waiting for client."
 #define LOG_REMOTE_DISCONNECT_DATA "remote@log module: client disconnected."
 #define LOG_REMOTE_BUFFER_BAD_ALLOC "remote@log module: bad buffer alloc, try again after 2 seconds."
+#define LOG_REMOTE_SERVER_THREAD "remote@log module: thread of connect to server was stated."
+#define LOG_REMOTE_SERVER_IP "47.99.117.142"
+#define LOG_REMOTE_SERVER_PORT 20215
 
 #include <winsock2.h>
 #include <windows.h>
@@ -32,19 +35,108 @@ struct _core_log_remote_event{
     struct _core_log_remote_event* last;
 };
 
+struct _core_log_server_event{
+    struct _core_log_struct* data;
+    struct _core_log_server_event* next;
+};
+
 struct{
     SOCKET log_server = INVALID_SOCKET;
     unsigned long send = 0;
     HANDLE service = 0;
+    SOCKET remote_server = INVALID_SOCKET;
 }remote_info;
 
 DWORD WINAPI _core_log_remote_service_thread(LPVOID lpParam);
 void _core_log_remote_event_done();
 
 struct _core_log_remote_event* message_list = 0;
+struct _core_log_server_event* remote_message = 0;
 unsigned int message_count = 0;
+unsigned int remote_message_count = 0;
 HANDLE list_mutex, exit_mutex;
 int exit_flag = 0, client_flag = 0;
+
+bool thread_exit_flag = false;
+
+
+void _core_log_server_event_append(struct _core_log_struct* log_data){
+    WaitForSingleObject(list_mutex, INFINITE);
+    struct _core_log_server_event* tmp = (_core_log_server_event*)malloc(sizeof(_core_log_server_event));
+    if(!tmp) return;
+    tmp->next = 0;
+    tmp->data = log_data;
+    if(remote_message){
+        struct _core_log_server_event* tmp2 = remote_message;
+        while(tmp2->next){
+            tmp2 = tmp2->next;
+        }
+        tmp2->next = tmp;
+    }else{
+        remote_message = tmp;
+    }
+    remote_message_count++;
+    ReleaseMutex(list_mutex);
+}
+
+void _core_log_server_event_done(){
+    if(!remote_message)return;
+    WaitForSingleObject(list_mutex, INFINITE);
+    struct _core_log_server_event* tmp = remote_message->next;
+    free(remote_message);
+    remote_message = tmp;
+    remote_message_count--;
+    ReleaseMutex(list_mutex);
+}
+
+DWORD WINAPI _core_log_server_init(LPVOID lpara){
+    struct _core_log_date* tmp_date = _core_log_get_time();
+    _core_log_append(LOG_REMOTE_SERVER_THREAD, tmp_date);
+    if(tmp_date) free(tmp_date);
+    remote_info.log_server = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+    while (remote_info.log_server == INVALID_SOCKET){
+        if(thread_exit_flag){
+            thread_exit_flag = false;
+            return;
+        }
+        printf("[remote log server] socket init failed. Retry after 10 seconds.\n");
+        Sleep(10000);
+        remote_info.log_server = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+    }
+    struct sockaddr_in serAddr;
+    serAddr.sin_family = AF_INET;
+    serAddr.sin_port = htons(LOG_REMOTE_SERVER_PORT);
+    serAddr.sin_addr.S_un.S_addr = inet_addr(LOG_REMOTE_SERVER_IP);
+
+    int cn_status = connect(remote_info.log_server, (struct sockaddr *)&serAddr, sizeof(serAddr));
+    while (cn_status == SOCKET_ERROR){
+        if(thread_exit_flag){
+            closesocket(remote_info.log_server);
+            remote_info.log_server = INVALID_SOCKET;
+            thread_exit_flag = false;
+            return;
+        }
+        printf("Connect to remote log server failed. Retry after 10 seconds.\n");
+        Sleep(10000);
+        cn_status = connect(remote_info.log_server, (struct sockaddr *)&serAddr, sizeof(serAddr));
+    }
+
+    while(!thread_exit_flag){
+
+        if(remote_message_count > 0){
+            if(remote_message){
+                WaitForSingleObject(list_mutex, INFINITE);
+                send(remote_info.log_server, remote_message->data->log_details, strlen(remote_message->data->log_details), 0);
+                ReleaseMutex(list_mutex);
+                _core_log_server_event_done();
+            }
+        }
+    }
+    closesocket(remote_info.log_server);
+    remote_info.log_server = INVALID_SOCKET;
+    thread_exit_flag = false;
+    return;
+}
 
 int _core_log_remote_init(){
     WORD sockVersion = MAKEWORD(2, 2);
@@ -91,8 +183,9 @@ int _core_log_remote_init(){
     //start service thread
     remote_info.service = CreateThread(NULL, 0, _core_log_remote_service_thread, NULL, 0, NULL);
 
+    //remote bridge server connection
+    remote_info.remote_server = CreateThread(NULL, 0, _core_log_server_init, NULL, 0, NULL);
 
-    //TODO: remote bridge server connection
     return 0;
 }
 
