@@ -42,6 +42,8 @@ int _core_service_log_stop(){
     int tmp_log_id = _core_log_append("log service: log service will be stop.", tmp_t);
     if(tmp_t) free(tmp_t);
     _core_log_local_write(_core_log_get_by_id(tmp_log_id));
+    _core_log_remote_event_append(_core_log_get_by_id(tmp_log_id));
+    _core_log_server_event_append(_core_log_get_by_id(tmp_log_id));
     _core_log_local_close();
     remote_close = _core_log_remote_service_stop();
     if(remote_close)return -1;
@@ -58,6 +60,7 @@ void _core_service_log_print(char* log_details){
     struct _core_log_struct* tmp_struct = _core_log_get_by_id(tmp_log_id);
     _core_log_local_write(tmp_struct);
     _core_log_remote_event_append(tmp_struct);
+    _core_log_server_event_append(tmp_struct);
     return;
 }
 

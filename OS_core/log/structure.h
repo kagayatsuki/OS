@@ -187,7 +187,7 @@ char* _core_log_get_time_string(struct _core_log_date* tm){     //transmit date 
     memcpy_s(tmp, 20, "0000-00-00-00_00_00", 19);
     
     for(int i1 = 0; i1 < 4; i1++){    //get year string
-        tmp[i1] = tm->year/(int)pow(10,3-i1)%10 + '0';
+        tmp[i1] = tm->year/(int)pow(10,(double)3-i1)%10 + '0';
         //putchar(tmp[i1]);
     }
   
@@ -201,7 +201,7 @@ char* _core_log_get_time_string(struct _core_log_date* tm){     //transmit date 
 }
 
 int _core_toolbox_get_any_bit(int num, int bit) {
-    return (num - num / (int)pow(10, bit) * (int)pow(10, bit)) / (int)pow(10, bit - 1) % 10;
+    return (num - num / (int)pow(10, bit) * (int)pow(10, bit)) / (int)pow(10, (double)bit - 1) % 10;
 }
 
 char* _core_log_get_time_string_except_ymd(struct _core_log_date* tm){       //transmit date data that excepted year and month and day to string

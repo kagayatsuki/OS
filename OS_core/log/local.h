@@ -7,10 +7,10 @@
 #ifndef LOG_LOCAL
 #define LOG_LOCAL
 
-#define LOG_DATA_ENTER "\r\n"
+#define LOG_DATA_ENTER "\n"
 #define LOG_DATA_BRACKET "["
 #define LOG_DATA_BRACKET_RIGHT "]"
-
+#define LOG_LOCAL_PATH "./sys/log/"
 
 #include <time.h>
 #include <stdio.h>
@@ -23,8 +23,8 @@ struct {
 
 int _core_log_local_init(){     //initialize local log sys, return -1 when sys had been inited, return -2 when bad alloc
     if(log_local_info.local)return -1;
-    char tmp_filename[36];
-    memset(tmp_filename, 0, 36);
+    char tmp_filename[64];
+    memset(tmp_filename, 0, 64);
 
     struct _core_log_date* tmp_date = _core_log_get_time();
     if(!tmp_date)return -2;
@@ -35,13 +35,15 @@ int _core_log_local_init(){     //initialize local log sys, return -1 when sys h
     }
     char* tmp_date_string_exc = _core_log_get_time_string_except_ymd(tmp_date);
 
-    memcpy_s(tmp_filename, 36, "./core_", 7);
-    memcpy_s(&tmp_filename[7], 20, tmp_date_string, strnlen_s(tmp_date_string, 20));
-    tmp_filename[26] = '\0';
+    int local_path_len = strnlen_s(LOG_LOCAL_PATH, 32);
+    memcpy_s(tmp_filename, 64, LOG_LOCAL_PATH, local_path_len);
+    memcpy_s(tmp_filename + local_path_len, 64 - local_path_len, "core_", 5);
+    memcpy_s(tmp_filename + local_path_len + 5, 64 - local_path_len - 5, tmp_date_string, strnlen_s(tmp_date_string, 20));
+    tmp_filename[local_path_len + 5 + strnlen_s(tmp_date_string, 20)-1] = '\0';
     free(tmp_date);
     free(tmp_date_string);
 
-    //printf("log file: %s\n", tmp_filename);
+    printf("log file: %s\n", tmp_filename);
     errno_t tmp_errno = fopen_s(&log_local_info.local, tmp_filename, "w+");
     if(tmp_errno)return -2;
     if (!log_local_info.local) return -2;

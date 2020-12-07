@@ -19,13 +19,16 @@
 #define LOG_REMOTE_SERVER_IP "47.99.117.142"
 #define LOG_REMOTE_SERVER_PORT 20215
 
+//#define WIN32_LEAN_AND_MEAN
 #include <winsock2.h>
-#include <windows.h>
+#include <Windows.h>
+#include <mmsystem.h>
 #include <stdlib.h>
+#include <time.h>
 
 #include "structure.h"
 #include "local.h"
-#include <WinSock2.h>
+//#include <WinSock2.h>
 
 #pragma comment(lib,"ws2_32.lib")
 #pragma comment( lib,"winmm.lib" )
@@ -44,6 +47,7 @@ struct{
     SOCKET log_server = INVALID_SOCKET;
     unsigned long send = 0;
     HANDLE service = 0;
+    HANDLE remote_service = 0;
     SOCKET remote_server = INVALID_SOCKET;
 }remote_info;
 
@@ -97,7 +101,7 @@ DWORD WINAPI _core_log_server_init(LPVOID lpara){
     while (remote_info.log_server == INVALID_SOCKET){
         if(thread_exit_flag){
             thread_exit_flag = false;
-            return;
+            return 0;
         }
         printf("[remote log server] socket init failed. Retry after 10 seconds.\n");
         Sleep(10000);
@@ -114,7 +118,7 @@ DWORD WINAPI _core_log_server_init(LPVOID lpara){
             closesocket(remote_info.log_server);
             remote_info.log_server = INVALID_SOCKET;
             thread_exit_flag = false;
-            return;
+            return 0;
         }
         printf("Connect to remote log server failed. Retry after 10 seconds.\n");
         Sleep(10000);
@@ -134,8 +138,9 @@ DWORD WINAPI _core_log_server_init(LPVOID lpara){
     }
     closesocket(remote_info.log_server);
     remote_info.log_server = INVALID_SOCKET;
+    //CloseHandle(remote_info.remote_service);
     thread_exit_flag = false;
-    return;
+    return 0;
 }
 
 int _core_log_remote_init(){
@@ -184,20 +189,21 @@ int _core_log_remote_init(){
     remote_info.service = CreateThread(NULL, 0, _core_log_remote_service_thread, NULL, 0, NULL);
 
     //remote bridge server connection
-    remote_info.remote_server = CreateThread(NULL, 0, _core_log_server_init, NULL, 0, NULL);
+    remote_info.remote_service = CreateThread(NULL, 0, _core_log_server_init, NULL, 0, NULL);
 
     return 0;
 }
 
 int _core_log_remote_service_stop(){    //if timeout return -1  (default 20s)
     //if (client_flag)CloseHandle(remote_info.service);
+    CloseHandle(remote_info.service);
     if(WaitForSingleObject(exit_mutex, 20000) == WAIT_TIMEOUT){
         return -1;
     }else{
         DWORD start_t = timeGetTime();
         while(!exit_flag){
             Sleep(200);
-            if(timeGetTime() - start_t > 20000){
+            if(timeGetTime() - start_t > 10000){
                 ReleaseMutex(exit_mutex);
                 return -1;
             }
@@ -269,24 +275,25 @@ DWORD WINAPI _core_log_remote_service_thread(LPVOID lpParam){
         sClient = accept(remote_info.log_server, (SOCKADDR * ) & remoteAddr, &nAddrlen);   //waiting for client
 
         while(true){
-            if(sClient == INVALID_SOCKET){  //client not connect
-                Sleep(400);
-                continue;
-            }
-            
-
-            if(WaitForSingleObject(exit_mutex, 200) == WAIT_TIMEOUT){       //if stop signal when linking
-                if(remote_info.log_server != INVALID_SOCKET)
+            if (WaitForSingleObject(exit_mutex, 200) == WAIT_TIMEOUT) {       //if stop signal when linking
+                if (remote_info.log_server != INVALID_SOCKET)
                     closesocket(remote_info.log_server);
-                if(sClient != INVALID_SOCKET)
+                if (sClient != INVALID_SOCKET)
                     closesocket(sClient);
                 remote_info.log_server = INVALID_SOCKET;
                 remote_info.service = 0;
                 free(send_tmp);
                 exit_flag = 1;
+                CloseHandle(remote_info.remote_service);
                 return 0;
-            }else{
+            }
+            else {
                 ReleaseMutex(exit_mutex);
+            }
+
+            if(sClient == INVALID_SOCKET){  //client not connect
+                Sleep(400);
+                continue;
             }
 
             client_flag = 1;

@@ -1,2 +1,6 @@
 OS_core/Debug/*
 OS_core/.vs/*
+OS_core/.idea/*
+OS_core/toolbox/private/logcat.exe
+OS_core/core_*
+OS_core/sys/*
