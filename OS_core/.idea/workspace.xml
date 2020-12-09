@@ -28,13 +28,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e7aeb3db-4a07-4729-b870-5e63b1e11f45" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/log/bridge_server.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/toolbox/private/OS_logcat.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/log/local_rebuild.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/log/logtime.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/log/remote_rebuild.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/log/remote.h" beforeDir="false" afterPath="$PROJECT_DIR$/log/remote.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/log/service_log.h" beforeDir="false" afterPath="$PROJECT_DIR$/log/service_log.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/log/structure.h" beforeDir="false" afterPath="$PROJECT_DIR$/log/structure.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/toolbox/private/print_format.h" beforeDir="false" afterPath="$PROJECT_DIR$/toolbox/private/print_format.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,7 +56,14 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="cf.first.check.clang-format" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="settings.editor.selected.configurable" value="preferences.general" />
+    <property name="settings.editor.selected.configurable" value="Errors" />
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="GradleAppRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="com.jetbrains.cidr.cpp.gradle.execution.GradleNativeBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -76,6 +81,10 @@
       <workItem from="1607227152838" duration="5203000" />
       <workItem from="1607250540289" duration="4991000" />
       <workItem from="1607261552623" duration="2598000" />
+      <workItem from="1607343074494" duration="3158000" />
+      <workItem from="1607437096467" duration="3281000" />
+      <workItem from="1607490105997" duration="1572000" />
+      <workItem from="1607505767316" duration="12475000" />
     </task>
     <servers />
   </component>
@@ -95,14 +104,22 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
+    <state x="751" y="382" key="#Scopes" timestamp="1607516061544">
+      <screen x="0" y="0" width="1920" height="1050" />
+    </state>
+    <state x="751" y="382" key="#Scopes/0.0.1920.1050@0.0.1920.1050" timestamp="1607516061544" />
     <state x="336" y="288" key="FileChooserDialogImpl" timestamp="1607257960412">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state x="336" y="288" key="FileChooserDialogImpl/0.0.1920.1050@0.0.1920.1050" timestamp="1607257960412" />
-    <state x="461" y="169" key="SettingsEditor" timestamp="1607258013226">
+    <state x="461" y="169" key="SettingsEditor" timestamp="1607516063514">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state x="461" y="169" key="SettingsEditor/0.0.1920.1050@0.0.1920.1050" timestamp="1607258013226" />
+    <state x="461" y="169" key="SettingsEditor/0.0.1920.1050@0.0.1920.1050" timestamp="1607516063514" />
+    <state x="932" y="3" width="995" height="1037" key="dock-window-1" timestamp="1607437244142">
+      <screen x="0" y="0" width="1920" height="1050" />
+    </state>
+    <state x="932" y="3" width="995" height="1037" key="dock-window-1/0.0.1920.1050@0.0.1920.1050" timestamp="1607437244142" />
     <state x="623" y="227" width="672" height="678" key="search.everywhere.popup" timestamp="1607258047448">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
