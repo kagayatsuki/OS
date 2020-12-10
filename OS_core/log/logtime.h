@@ -38,9 +38,9 @@ _core_log_date* _core_log_date_get(){
         printf(LOG_DATE_EXCEPTION);
         return 0;
     }
-    lt=localtime(&t);
-    tmp->year = (uint16_t)lt->tm_year;
-    tmp->month = (uint8_t)lt->tm_mon;
+    lt=localtime(&tm_tmp);
+    tmp->year = (uint16_t)lt->tm_year + 1900;
+    tmp->month = (uint8_t)lt->tm_mon + 1;
     tmp->day = (uint8_t)lt->tm_mday;
     tmp->hour = (uint8_t)lt->tm_hour;
     tmp->minute = (uint8_t)lt->tm_min;
@@ -61,7 +61,7 @@ int _core_log_date_string_get(struct _core_log_date* date, char* buffer){
     buffer[offset++] = '-';
     buffer[offset++] = date->month / 10 + '0';
     buffer[offset++] = date->month % 10 + '0';
-    buffer[offset++] = '-'
+    buffer[offset++] = '-';
     buffer[offset++] = date->day / 10 + '0';
     buffer[offset++] = date->day % 10 + '0';
     buffer[offset++] = ' ';

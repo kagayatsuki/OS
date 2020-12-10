@@ -21,6 +21,8 @@
 #define LOG_REMOTE_SERVER_PORT 20000
 #endif
 
+#define LOG_LOCAL_PORT 20218
+
 #ifdef winPlatform  //windows
 #include <winsock2.h>
 #include <mmsystem.h>
@@ -34,7 +36,7 @@ typedef HANDLE _core_thread;
 #define _core_socket(family, type) socket(family, type, IPPROTO_TCP)
 #define _core_INVALID_SOCKET INVALID_SOCKET
 #define _core_SOCKET_ERROR SOCKET_ERROR
-#define _core_sleep(seconds) Sleep(seconds)
+#define _core_sleep(seconds) Sleep(seconds * 1000)
 #define _core_socket_close(sockHandle) closesocket(sockHandle)
 typedef DWORD _core_thread_ret;
 #define _core_thread_create(HANDLE, entry, arg) (HANDLE = CreateThread(NULL, 0, entry, arg, 0, NULL), !HANDLE)
@@ -77,6 +79,8 @@ typedef void* _core_thread_ret;
 
 #define _REMOTE_CONNECT_ERROR "remote log server: connect failed. Retry after 10 seconds."
 #define _REMOTE_CONNECT_SUCCESS "remote log server: connecting success."
+#define _REMOTE_CONNECT_CLOSE "remote log server: module closed."
+#define _REMOTE_LOCAL_SERVER_CLOSE "local log server: closed."
 
 struct _core_log_event_node{
     char* string;
@@ -87,21 +91,22 @@ typedef _core_log_event_node log_local_event;
 typedef _core_log_event_node log_remote_event;
 
 struct {
-    log_local_event *local_message_list = 0;
-    log_remote_event *remote_message_list = 0;
-    uint32_t local_message_count = 0, remote_message_count = 0;
+    log_local_event *local_message_list;
+    log_remote_event *remote_message_list;
+    uint32_t local_message_count, remote_message_count;
 }_remote_log_info;
 
 struct{
      _core_mutex list_mutex;
-     _core_socket_struct log_server = 0;
-     _core_socket_struct local_server = 0;
-     _core_thread remote_service = 0;
-     _core_thread local_service = 0;
-     bool inited = false;
+     _core_socket_struct log_server;
+     _core_socket_struct local_server;
+     _core_thread remote_service;
+     _core_thread local_service;
+     bool inited;
 }_remote_log_sys;
 
 int _log_remote_exit_flag = 0;
+int _core_flag_socket_inited = 0;
 
 /** get last node of link list **/
 _core_log_event_node* _core_log_remote_message_list_get_last(struct _core_log_event_node* node){
@@ -118,7 +123,7 @@ _core_log_event_node* _core_log_remote_message_list_get_last(struct _core_log_ev
 void _core_log_remote_message_done(int Remote_orLocal){
     _REMOTE_INIT_CHECK();
     struct _core_log_event_node** operator_list;
-    uint32_t** message_count;
+    uint32_t* message_count;
 
     /** operation mode **/
     if(Remote_orLocal == 1){
@@ -137,7 +142,7 @@ void _core_log_remote_message_done(int Remote_orLocal){
     struct _core_log_event_node* next_node = (*operator_list)->next;
     free((*operator_list)->string);
     *operator_list = next_node;
-    *message_count--;
+    (*message_count)--;
     _core_mutex_unlock(_remote_log_sys.list_mutex);
 }
 
@@ -147,7 +152,7 @@ int _core_log_remote_message_append(struct _core_log_struct* log_data, int Remot
         return -1;
     _REMOTE_INIT_CHECK(-1);
     struct _core_log_event_node** operator_list, * last_node = 0, * alloc_tmp = 0;
-    uint32_t** message_count;
+    uint32_t* message_count;
 
     /** operation mode **/
     if(Remote_orLocal == 1) {
@@ -184,7 +189,7 @@ int _core_log_remote_message_append(struct _core_log_struct* log_data, int Remot
     }else{  /** no any node exists **/
         *operator_list = alloc_tmp;
     }
-    *message_count--;
+    (*message_count)++;
     _core_mutex_unlock(_remote_log_sys.list_mutex);
     return 0;
 }
@@ -215,12 +220,13 @@ _core_log_local_thread{
     struct sockaddr_in clientAddr, localAddr;
     int clientAddrLen = sizeof(clientAddr);
 
-    int log_id_t = 0;
+    int log_id_t = _core_log_append("local log server: initializing.", _core_log_date_get());
+    _core_log_local_append(_core_log_get_by_id(log_id_t));
 
     /** socket info set **/
     localAddr.sin_family = AF_INET;
-    localAddr.sin_port = htons(LOG_REMOTE_SERVER_PORT);
-    localAddr.sin_addr.S_un = INADDR_ANY;
+    localAddr.sin_port = htons(LOG_LOCAL_PORT);
+    localAddr.sin_addr.S_un.S_addr = INADDR_ANY;
 
     /** socket init **/
     //_remote_log_sys.local_server = _core_socket(AF_INET, SOCK_STREAM);
@@ -231,6 +237,8 @@ _core_log_local_thread{
         _REMOTE_EXIT_CHECK(0);
         //_remote_log_sys.local_server = _core_socket(AF_INET, SOCK_STREAM);
     }
+    log_id_t = _core_log_append("local log server socket init success.", _core_log_date_get());
+    _core_log_local_append(_core_log_get_by_id(log_id_t));
     while(bind(_remote_log_sys.local_server, (struct sockaddr*)&localAddr, sizeof(localAddr)) == _core_SOCKET_ERROR){
         log_id_t = _core_log_append("local log server port bind failed. Retry after 10 seconds.", _core_log_date_get());
         _core_log_local_append(_core_log_get_by_id(log_id_t));
@@ -250,11 +258,17 @@ _core_log_local_thread{
     while(true){
         sClient = accept(_remote_log_sys.local_server, (SOCKADDR*)&clientAddr, &clientAddrLen);
         /** received a client, go to loop **/
+        log_id_t = _core_log_append("local log server: client connected.", _core_log_date_get());
+        _core_log_local_append(_core_log_get_by_id(log_id_t));
+
         while(true){
             /** check exit signal every circle **/
             if(_log_remote_exit_flag){
                 _core_socket_close(_remote_log_sys.local_server);
                 _remote_log_sys.local_server = _core_INVALID_SOCKET;
+                log_id_t = _core_log_append(_REMOTE_LOCAL_SERVER_CLOSE, _core_log_date_get());
+                _core_log_local_append(_core_log_get_by_id(log_id_t));
+                _core_sleep(2);
                 return 0;
             }
             /** check message not was send **/
@@ -268,25 +282,46 @@ _core_log_local_thread{
 
 /** remote server connection thread **/
 _core_log_remote_thread{
-    _core_log_append("remote log server: initializing.", _core_log_date_get());
+    uint32_t log_id_t = 0;
+    log_id_t = _core_log_append("remote log server: initializing.", _core_log_date_get());
+    _core_log_local_append(_core_log_get_by_id(log_id_t));
     /** Server info **/
     struct sockaddr_in serverAddr;
     serverAddr.sin_family = AF_INET;
     serverAddr.sin_port = htons(LOG_REMOTE_SERVER_PORT);
     serverAddr.sin_addr.S_un.S_addr = inet_addr(LOG_REMOTE_SERVER_IP);
 
+    /** init socket **/
+    log_id_t = _core_log_append("remote log server: socket init.", _core_log_date_get());
+    _core_log_local_append(_core_log_get_by_id(log_id_t));
+    while ((_remote_log_sys.log_server = _core_socket(AF_INET, SOCK_STREAM)) == _core_INVALID_SOCKET){
+        if(_log_remote_exit_flag)
+            return 0;
+        log_id_t = _core_log_append("remote log server: socket init failed. Retry after 10 seconds", _core_log_date_get());
+        _core_log_local_append(_core_log_get_by_id(log_id_t));
+        _core_sleep(10);
+    }
+
     /** try to connect server **/
     while(_core_SOCKET_ERROR == connect(_remote_log_sys.log_server, (struct sockaddr*)&serverAddr, sizeof(serverAddr))){
-        _core_log_append(_REMOTE_CONNECT_ERROR, _core_log_date_get());
+        log_id_t = _core_log_append(_REMOTE_CONNECT_ERROR, _core_log_date_get());
+        _core_log_local_append(_core_log_get_by_id(log_id_t));
         printf("%s\n", _REMOTE_CONNECT_ERROR);
         _core_sleep(10);
         if(_log_remote_exit_flag)
             return 0;
     }
+    log_id_t = _core_log_append("remote log server: connected.", _core_log_date_get());
+    _core_log_local_append(_core_log_get_by_id(log_id_t));
+    _core_log_remote_message_append(_core_log_get_by_id(log_id_t), 2);
 
     while(true){
         /** check interrupt **/
         if(_log_remote_exit_flag){
+            log_id_t = _core_log_append("remote log server: quit.", _core_log_date_get());
+            _core_log_local_append(_core_log_get_by_id(log_id_t));
+            _core_log_remote_message_append(_core_log_get_by_id(log_id_t), 2);
+            _core_log_remote_send(_remote_log_sys.log_server, 1);
             _core_socket_close(_remote_log_sys.log_server);
             _remote_log_sys.log_server = _core_INVALID_SOCKET;
             return 0;
@@ -294,6 +329,8 @@ _core_log_remote_thread{
 
         /** message post **/
         if(_remote_log_info.remote_message_count > 0){
+            //debug
+            //printf("sent: %s", _remote_log_info.remote_message_list->string);
             _core_log_remote_send(_remote_log_sys.log_server, 1);
         }
     }
@@ -301,12 +338,49 @@ _core_log_remote_thread{
 };
 
 int _core_log_remote_local_server_start(){
+    _log_remote_exit_flag = 0;
     if(_remote_log_sys.local_service)
         return -1;
+    if(_core_thread_create(_remote_log_sys.local_service, _core_log_local_service_thread, 0)){
+        return -1;
+    }
+    return 0;
 }
 
 int _core_log_remote_server_connect(){
+    _log_remote_exit_flag = 0;
+    if(_remote_log_sys.remote_service)
+        return -1;
+    if(_core_thread_create(_remote_log_sys.remote_service, _core_log_remote_service_thread, 0)){
+        return -1;
+    }
+    return 0;
+}
 
+int _core_log_remote_local_server_stop(){
+    if(!_remote_log_sys.local_service){
+        return -1;
+    }
+    _log_remote_exit_flag = 1;
+    _core_thread_ret ret;
+    return !_core_thread_close(_remote_log_sys.local_service);
+}
+
+int _core_log_remote_service_stop(){
+    if(!_remote_log_sys.remote_service){
+        return -1;
+    }
+    _log_remote_exit_flag = 1;
+    _core_thread_ret ret;
+    return _core_thread_join(_remote_log_sys.remote_service, ret);
+}
+
+int _core_log_socket_init(){
+    if(_core_flag_socket_inited)
+        return 1;
+    _core_flag_socket_inited = _core_socket_init();
+    _remote_log_sys.inited = true;
+    return _core_flag_socket_inited;
 }
 
 #endif //OS_CORE_REMOTE_REBUILD_H

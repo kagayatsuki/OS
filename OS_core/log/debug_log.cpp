@@ -3,20 +3,14 @@
 //
 
 #include <stdio.h>
-#include "service_log.h"
+//#include "service_log.h"
+#include "logservice.h"
 
 int main(){
-    int tmp_service_start = _core_service_log_start(1);
-    if(tmp_service_start == -1){
+    if(_core_service_log_start()){
         printf("Log service start failed.\n");
         Sleep(3000);
         return 0;
-    }else if(tmp_service_start == 1){
-        printf("Log service: local module init failed.\n");
-        Sleep(3000);
-    }else if(tmp_service_start == 2){
-        printf("Log service: remote module init failed.\n");
-        Sleep(3000);
     }else{
         printf("Log service: Started.\n");
     }
@@ -25,9 +19,10 @@ int main(){
     int exit_t = 0;
     while(!exit_t){
         memset(tmp_input, 0, 512);
-        gets_s(tmp_input, 512);
+
+        gets(tmp_input);
         if(tmp_input[0] != '\0') {
-            if(!strncmp(tmp_input, "exit", strnlen_s(tmp_input, 512))){
+            if(!strncmp(tmp_input, "exit", strlen(tmp_input))){
                 exit_t = 1;
                 int tmp_service_stop = _core_service_log_stop();
                 printf("Service stop: %d\n", tmp_service_stop);
