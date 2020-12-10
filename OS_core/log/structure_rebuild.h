@@ -19,7 +19,7 @@
 #ifdef winPlatform  //platform chosen
 #include <windows.h>
 
-#define _core_mutex HANDLE
+typedef HANDLE _core_mutex;
 #define _core_mutex_create(mutex) (mutex = Create(nullptr, false, NULL), \
                                     GetLastError() == ERROR_ALREADY_EXISTS)
 #define _core_mutex_lock(mutex) WaitForSingleObject(mutex, INFINITE)
@@ -29,7 +29,7 @@
 #else   //linux
 #include <pthread.h>
 
-#define _core_mutex pthread_mutex_t
+typedef pthread_mutex_t _core_mutex;
 #define _core_mutex_create(mutex) (pthread_mutex_init(&mutex, NULL), mutex_addr)
 #define _core_mutex_lock(mutex) pthread_mutex_lock(&mutex)
 #define _core_mutex_trylock(mutex) pthread_mutex_trylock(&mutex)
@@ -122,8 +122,9 @@ _core_log* _core_log_get_second(){
 
 //destroy first log in sys when log count will cross count limit
 void _core_log_free_first(){
-    if(!_core_log_sys.log_list || (_core_log_sys.log_count == 0))
+    if(!_core_log_sys.log_list || (_core_log_sys.log_count == 0) || !_core_log_sys.inited)
         return;
+    _core_mutex_lock(_core_log_sys._log_operate_mutex);
     struct _core_log* tmp_first = _core_log_get_first(), * tmp_second = _core_log_get_second();
     if(tmp_first->log_struct->log_details) free(tmp_first->log_struct->log_details);
     if(tmp_first->log_struct->log_date) free(tmp_first->log_struct->log_date);
@@ -134,7 +135,7 @@ void _core_log_free_first(){
         tmp_next->last = 0;
         _core_log_sys.log_list = tmp_next;
     }
-
+    _core_mutex_unlock(_core_log_sys._log_operate_mutex);
     _core_log_sys.log_count--;
 }
 
@@ -147,7 +148,7 @@ void _core_log_clean_all(){
 //append log to sys, return log id, any exception return 0
 uint32_t _core_log_append(const char* log_detail, struct _core_log_date* log_date){
     uint32_t tmp_log_id = 0;
-
+    if(!_core_log_sys.inited)return 0;
     struct _core_log_date* date_tmp = log_date;
 
     //Exception check every initial step
@@ -156,19 +157,23 @@ uint32_t _core_log_append(const char* log_detail, struct _core_log_date* log_dat
     if(!log_date){  //if not provide date then set time when append
         date_tmp = _core_log_date_get();
     }
+    _core_mutex_lock(_core_log_sys._log_operate_mutex);
     struct _core_log_struct* struct_tmp = (struct _core_log_struct*)malloc(sizeof(_core_log_struct));
     if(!struct_tmp){
+        _core_mutex_unlock(_core_log_sys._log_operate_mutex);
         printf("Exception: bad malloc when append log.\n");
         return 0;
     }
     struct _core_log log_tmp = (struct _core_log*)malloc(sizeof(_core_log));
     if(!log_tmp){
+        _core_mutex_unlock(_core_log_sys._log_operate_mutex);
         printf("Exception: bad malloc when append log.\n");
         free(struct_tmp);
         free(date_tmp);
     }
     struct_tmp->log_details = (char*)malloc(strnlen(log_detail, LOG_MAX_LEN) + 1);
     if(!struct_tmp->log_details){
+        _core_mutex_unlock(_core_log_sys._log_operate_mutex);
         printf("Exception: bad malloc when append log.\n");
         free(struct_tmp);
         free(date_tmp);
@@ -185,7 +190,9 @@ uint32_t _core_log_append(const char* log_detail, struct _core_log_date* log_dat
 
     //Set link list
     if(_core_log_sys.log_count >= LOG_MAX_COUNT){
+        _core_mutex_unlock(_core_log_sys._log_operate_mutex);
         _core_log_free_first();
+        _core_mutex_lock(_core_log_sys._log_operate_mutex);
     }
     if(_core_log_sys.log_list){
         log_tmp.last = _core_log_sys.log_list;
@@ -194,6 +201,7 @@ uint32_t _core_log_append(const char* log_detail, struct _core_log_date* log_dat
     }
     _core_log_sys.log_list = log_tmp;
     _core_log_sys.log_count++;
+    _core_mutex_unlock(_core_log_sys._log_operate_mutex);
     return tmp_log_id;
 }
 
