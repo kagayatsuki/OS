@@ -1,1 +1,1 @@
-g++ .\debug_log.cpp -o ..\debug_log.exe -lwsock32
+g++ .\debug_log.cpp -o ..\Debug\debug_log.exe -lwsock32

@@ -2,5 +2,4 @@ OS_core/Debug/*
 OS_core/.idea/*
 OS_core/toolbox/private/logcat.exe
 OS_core/sys/log/*
-OS_core/sys/debug_log.exe
 OS_core/log/server_info.h
