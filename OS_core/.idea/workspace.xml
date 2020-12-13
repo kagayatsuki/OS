@@ -19,15 +19,31 @@
     <select />
   </component>
   <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
-    <generated />
+    <generated>
+      <config projectName="OS_vfs_debug" targetName="debug_vfs" />
+    </generated>
   </component>
-  <component name="CMakeSettings">
+  <component name="CMakeSettings" AUTO_RELOAD="true">
     <configurations>
       <configuration PROFILE_NAME="Debug" CONFIG_NAME="Debug" />
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e7aeb3db-4a07-4729-b870-5e63b1e11f45" name="Default Changelist" comment="" />
+    <list default="true" id="e7aeb3db-4a07-4729-b870-5e63b1e11f45" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/include/calls.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/include/fs_path.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/include/memories.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/include/types.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/res/debug_vfs.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vfs/fs_file.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vfs/fs_struct.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vfs/imgfs/imgfs_struct.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vfs/vfs_debug.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/OS_core.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/OS_core.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/log/structure_rebuild.h" beforeDir="false" afterPath="$PROJECT_DIR$/log/structure_rebuild.h" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -36,6 +52,7 @@
   <component name="ClangdSettings">
     <option name="formatViaClangd" value="false" />
   </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
@@ -49,8 +66,25 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="cf.first.check.clang-format" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/CMakeLists.txt" />
     <property name="settings.editor.selected.configurable" value="Errors" />
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="debug_vfs" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="OS_vfs_debug" TARGET_NAME="debug_vfs" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="OS_vfs_debug" RUN_TARGET_NAME="debug_vfs">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="GradleAppRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="com.jetbrains.cidr.cpp.gradle.execution.GradleNativeBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -74,6 +108,8 @@
       <workItem from="1607505767316" duration="19693000" />
       <workItem from="1607576116531" duration="2386000" />
       <workItem from="1607585558117" duration="11033000" />
+      <workItem from="1607676633919" duration="12548000" />
+      <workItem from="1607829843811" duration="12363000" />
     </task>
     <servers />
   </component>
@@ -97,10 +133,10 @@
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state x="751" y="382" key="#Scopes/0.0.1920.1050@0.0.1920.1050" timestamp="1607516061544" />
-    <state x="336" y="288" key="FileChooserDialogImpl" timestamp="1607257960412">
+    <state x="336" y="288" key="FileChooserDialogImpl" timestamp="1607677881650">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state x="336" y="288" key="FileChooserDialogImpl/0.0.1920.1050@0.0.1920.1050" timestamp="1607257960412" />
+    <state x="336" y="288" key="FileChooserDialogImpl/0.0.1920.1050@0.0.1920.1050" timestamp="1607677881650" />
     <state x="461" y="169" key="SettingsEditor" timestamp="1607516063514">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>

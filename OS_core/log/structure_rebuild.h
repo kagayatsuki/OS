@@ -14,48 +14,13 @@
 #include <cstring>
 #include <time.h>
 #include <errno.h>
+#include <types.h>
+#include <calls.h>
 
 #include "logtime.h"
 
-#ifdef winPlatform  //platform chosen
-#include <windows.h>
-
-typedef HANDLE _core_mutex;
-#define _core_mutex_create(mutex) (mutex = CreateMutex(nullptr, false, NULL), \
-                                    GetLastError() == ERROR_ALREADY_EXISTS)
-#define _core_mutex_lock(mutex) WaitForSingleObject(mutex, INFINITE)
-#define _core_mutex_trylock(mutex) WaitForSingleObject(mutex, 50)
-#define _core_mutex_unlock(mutex) ReleaseMutex(mutex)
-#define _core_mutex_destroy(mutex) CloseHandle(mutex)
-#else   //linux
-#include <pthread.h>
-
-typedef pthread_mutex_t _core_mutex;
-#define _core_mutex_create(mutex) (pthread_mutex_init(&mutex, NULL), mutex_addr)
-#define _core_mutex_lock(mutex) pthread_mutex_lock(&mutex)
-#define _core_mutex_trylock(mutex) pthread_mutex_trylock(&mutex)
-#define _core_mutex_unlock(mutex) pthread_mutex_unlock(&mutex)
-#define _core_mutex_destroy(mutex) pthread_mutex_destroy(&mutex)
-#endif
-
 #ifndef strnlen
 #define strnlen(x,y) strlen(x)
-#endif
-
-#ifndef uint32_t
-#define uint32_t unsigned int
-#endif
-
-#ifndef uint16_t
-#define uint16_t unsigned short
-#endif
-
-#ifndef uint8_t
-#define uint8_t unsigned char
-#endif
-
-#ifndef nullptr
-#define nullptr 0
 #endif
 
 #define LOG_MAX_COUNT 1000
