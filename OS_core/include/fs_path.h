@@ -268,7 +268,7 @@ int fs_path_check_illegal(char* path){
     int len = strlen(path);
     for(int i = 0; i < len; i++){
         if(((path[i] > 'a' && path[i] < 'z') || (path[i] > 'A' && path[i] < 'Z') || (path[i] > '0' && path[i] < '9')));
-        else if((path[i] == '.' || path[i] == '-' || path[i] == '+' || path[i] == '=' || path[i] == '_'));
+        else if((path[i]=='.' || path[i]=='-' || path[i]=='+' || path[i]=='=' || path[i]=='_' || path[i]=='\\' || path[i]=='/'));
         else return 1;
     }
     return 0;

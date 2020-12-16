@@ -30,6 +30,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e7aeb3db-4a07-4729-b870-5e63b1e11f45" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/vfs/imgfs/imgfs.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/include/fs_path.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/fs_path.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/vfs/imgfs/imgfs_struct.h" beforeDir="false" afterPath="$PROJECT_DIR$/vfs/imgfs/imgfs_struct.h" afterDir="false" />
@@ -60,14 +61,14 @@
     <property name="settings.editor.selected.configurable" value="Errors" />
   </component>
   <component name="RunManager">
-    <configuration name="debug_vfs" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="OS_vfs_debug" TARGET_NAME="debug_vfs" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="OS_vfs_debug" RUN_TARGET_NAME="debug_vfs">
+    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration default="true" type="GradleAppRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true">
+    <configuration name="debug_vfs" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="OS_vfs_debug" TARGET_NAME="debug_vfs" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="OS_vfs_debug" RUN_TARGET_NAME="debug_vfs">
       <method v="2">
-        <option name="com.jetbrains.cidr.cpp.gradle.execution.GradleNativeBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
   </component>
@@ -96,6 +97,9 @@
       <workItem from="1607676633919" duration="12548000" />
       <workItem from="1607829843811" duration="12363000" />
       <workItem from="1607847911968" duration="13891000" />
+      <workItem from="1607871513497" duration="594000" />
+      <workItem from="1608024107865" duration="19505000" />
+      <workItem from="1608113599654" duration="3100000" />
     </task>
     <servers />
   </component>
@@ -131,9 +135,9 @@
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
     <state x="932" y="3" width="995" height="1037" key="dock-window-1/0.0.1920.1050@0.0.1920.1050" timestamp="1607437244142" />
-    <state x="623" y="227" width="672" height="678" key="search.everywhere.popup" timestamp="1607589750719">
+    <state x="623" y="227" width="672" height="678" key="search.everywhere.popup" timestamp="1608038204584">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>
-    <state x="623" y="227" width="672" height="678" key="search.everywhere.popup/0.0.1920.1050@0.0.1920.1050" timestamp="1607589750719" />
+    <state x="623" y="227" width="672" height="678" key="search.everywhere.popup/0.0.1920.1050@0.0.1920.1050" timestamp="1608038204584" />
   </component>
 </project>
