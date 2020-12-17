@@ -10,7 +10,7 @@
 #define LOG_LOCAL
 
 #include <stdio.h>
-#include "structure_rebuild.h"
+#include "log_structure.h"
 
 #define LOG_DATA_NEXT_LINE '\n'
 #define LOG_DATE_BRACKET '['

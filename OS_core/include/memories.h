@@ -6,7 +6,7 @@
 #define OS_VFS_DEBUG_MEMORIES_H
 
 #include <stdlib.h>
-#include <types.h>
+#include "types.h"
 #include <malloc.h>
 
 size_t mem_get_alloc_size(void* first_prt){

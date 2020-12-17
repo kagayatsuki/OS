@@ -10,8 +10,8 @@
 
 #include <unistd.h>
 
-#include "structure_rebuild.h"
-#include "local_rebuild.h"
+#include "log_structure.h"
+#include "log_local.h"
 #include "server_info.h"
 
 /** set default server if "server_info.h not be include" **/

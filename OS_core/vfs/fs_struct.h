@@ -6,9 +6,9 @@
 #ifndef FS_STRUCT
 #define FS_STRUCT
 
-#include <types.h>
-#include <fs_file.h>
-#include <logtime.h>
+#include "../include/types.h"
+#include "fs_file.h"
+#include "../log/logtime.h"
 
 struct _core_fs_info_struct{
     uint32_t file_count;

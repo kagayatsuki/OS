@@ -8,9 +8,9 @@
 #ifndef CORE_LOG_SERVICE
 #define CORE_LOG_SERVICE
 
-#include "structure_rebuild.h"
-#include "local_rebuild.h"
-#include "remote_rebuild.h"
+#include "log_structure.h"
+#include "log_local.h"
+#include "log_remote.h"
 
 int flag_log_service_running = 0;
 

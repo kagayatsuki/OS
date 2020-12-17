@@ -5,13 +5,13 @@
 
 #include <stdlib.h>
 #include <new>
-#include <types.h>
-#include <calls.h>
+#include "../../include/types.h"
+#include "../../include/calls.h"
 
-#include <logservice.h>
-#include <logtime.h>
-#include <fs_struct.h>
-#include <fs_path.h>
+#include "../../log/logservice.h"
+#include "../../log/logtime.h"
+#include "../fs_struct.h"
+#include "../../include/fs_path.h"
 
 #define _IMGFS_BLOCK_SIZE 512       //bytes
 #define _IMGFS_A_FILE_P imgfs_struct::imgfs_already_file_list*
@@ -122,7 +122,6 @@ private:
 
     _core_mutex read_lock;
 
-    uint32_t getFileOfParent(uint32_t p_inode, char* filename);
     void* already_dir_get(char* path);
     void* already_file_get(_IMGFS_A_FILE_P p_struct, char* name);
     void* already_dir_append(_IMGFS_A_FILE_P p_struct, char* name);

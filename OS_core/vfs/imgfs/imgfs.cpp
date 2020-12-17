@@ -784,10 +784,22 @@ uint32_t imgfs::FileRead(uint32_t handle, void* buffer, uint32_t read_len){
     if(!op_t)
         return 0;
     _core_mutex_lock(read_lock);
+    char buff[512] = {0};
+    uint32_t off_mod = 0;
     fseek(local, (op_t->node->data_address+op_t->cur) - ftell(local), SEEK_CUR);
     if(read_len > op_t->node->data_length - op_t->cur)
         read_len = op_t->node->data_length - op_t->cur;
-    uint32_t ret = fread(buffer, read_len, 1, local);
+    off_mod = read_len % 512;
+    int i = 0;
+    uint32_t ret = 0;
+    for (; i < read_len / 512; i++){
+        ret+= fread(buff, 512, 1, local);
+        memcpy(((char*)buffer + 512*i), buff, 512);
+    }
+    if(off_mod){
+        ret+= fread(buff, off_mod, 1, local);
+        memcpy(((char*)buffer + 512*i), buff, off_mod);
+    }
     _core_mutex_unlock(read_lock);
     op_t->cur+=read_len;
     return ret;

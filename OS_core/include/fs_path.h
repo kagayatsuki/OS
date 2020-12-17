@@ -8,8 +8,8 @@
 #define FS_FILENAME_MAX 255
 #define FS_PATH_MAX 2047
 
-#include <calls.h>
-#include <types.h>
+#include "calls.h"
+#include "types.h"
 
 /** format path string. like "/var\..///a/./c" to "/var/../a/c" **/
 int fs_path_format(char* path, char** path_buffer){

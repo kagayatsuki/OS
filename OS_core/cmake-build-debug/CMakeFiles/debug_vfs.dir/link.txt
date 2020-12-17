@@ -1,3 +1,0 @@
-"G:\Extra\JetBrains\CLion 2020.2.4\bin\cmake\win\bin\cmake.exe" -E rm -f CMakeFiles\debug_vfs.dir/objects.a
-F:\LocalLibrary\MinGW\bin\ar.exe cr CMakeFiles\debug_vfs.dir/objects.a @CMakeFiles\debug_vfs.dir\objects1.rsp
-F:\LocalLibrary\MinGW\bin\g++.exe -g   -Wl,--whole-archive CMakeFiles\debug_vfs.dir/objects.a -Wl,--no-whole-archive  -o debug_vfs.exe -Wl,--out-implib,libdebug_vfs.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\debug_vfs.dir\linklibs.rsp

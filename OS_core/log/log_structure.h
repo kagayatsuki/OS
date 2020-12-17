@@ -14,8 +14,8 @@
 #include <cstring>
 #include <time.h>
 #include <errno.h>
-#include <types.h>
-#include <calls.h>
+#include "../include/types.h"
+#include "../include/calls.h"
 
 #include "logtime.h"
 
