@@ -1,6 +1,9 @@
 #ifndef OS_VFS_DEBUG_TYPES_H
 #define OS_VFS_DEBUG_TYPES_H
 
+#ifndef uint64_t
+#define uint64_t unsigned long long
+#endif
 
 #ifndef uint32_t
 #define uint32_t unsigned int
