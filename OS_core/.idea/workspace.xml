@@ -28,10 +28,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e7aeb3db-4a07-4729-b870-5e63b1e11f45" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/../fake-vm/simpleUI/debug.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../fake-vm/simpleUI/simple_unicode.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../fake-vm/simpleUI/simple_window.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/include/types.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/types.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vfs/imgfs/imgfs.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/vfs/imgfs/imgfs.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vfs/imgfs/imgfs_struct.h" beforeDir="false" afterPath="$PROJECT_DIR$/vfs/imgfs/imgfs_struct.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fake-vm/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../fake-vm/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,9 +64,9 @@
     </key>
   </component>
   <component name="RunManager">
-    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true">
+    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true">
       <method v="2">
-        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
     <configuration default="true" type="GradleAppRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true">
@@ -106,6 +107,7 @@
       <workItem from="1608723473134" duration="223000" />
       <workItem from="1608732516218" duration="80000" />
       <workItem from="1608900746773" duration="84000" />
+      <workItem from="1610086574421" duration="78000" />
     </task>
     <servers />
   </component>
