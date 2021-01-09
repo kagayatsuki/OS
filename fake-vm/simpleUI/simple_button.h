@@ -33,14 +33,31 @@ public:
     void setPosition(int x, int y);
 
     void setDefaultFont();
+    void setFont(HFONT font);
 protected:
     HWND this_parent;
     HWND this_hwnd;
     int this_id;
 };
 
+void simple_button::setFont(HFONT font) {
+    SendMessageW(this_hwnd, WM_SETFONT, (WPARAM)font, 0);
+}
+
+void simple_button::setPosition(int x, int y) {
+    tagRECT rect;
+    GetWindowRect(this_hwnd, &rect);
+    MoveWindow(this_hwnd, x, y, rect.right - rect.left, rect.bottom - rect.top, true);
+}
+
+void simple_button::setSize(int width, int height) {
+    tagRECT rect;
+    GetClientRect(this_hwnd, &rect);
+    MoveWindow(this_hwnd, rect.left, rect.top, width, height, true);
+}
+
 void simple_button::setDefaultFont() {
-    HFONT t_font = CreateFont(16, 0, 0, 0, 10, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, FF_DONTCARE, "微软雅黑");
+    HFONT t_font = CreateFont(18, 0, 0, 0, 10, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, FW_NORMAL, "微软雅黑");
     SendMessageW(this_hwnd, WM_SETFONT, (WPARAM)t_font, 0);
 }
 

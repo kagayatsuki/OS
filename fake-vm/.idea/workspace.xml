@@ -28,14 +28,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0df593ab-be7c-415e-b341-0a98a0061055" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/simpleUI/debug.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/simpleUI/simple_activity.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/simpleUI/simple_button.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/simpleUI/simple_style.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/simpleUI/simple_unicode.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/simpleUI/simple_window.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../OS_core/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../OS_core/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/simpleUI/debug.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/simpleUI/debug.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/simpleUI/simple_activity.h" beforeDir="false" afterPath="$PROJECT_DIR$/simpleUI/simple_activity.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/simpleUI/simple_button.h" beforeDir="false" afterPath="$PROJECT_DIR$/simpleUI/simple_button.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -67,13 +63,6 @@
       <recent name="G:\repo\OS\fake-vm\simpleUI" />
     </key>
   </component>
-  <component name="RunManager">
-    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -88,6 +77,7 @@
       <workItem from="1610086654385" duration="8439000" />
       <workItem from="1610095476962" duration="3490000" />
       <workItem from="1610111724552" duration="7616000" />
+      <workItem from="1610170014090" duration="4018000" />
     </task>
     <servers />
   </component>

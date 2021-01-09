@@ -19,19 +19,18 @@ typedef struct callback_list{   //控件对应的回调表
     callback_list *next;
 }CallbackList;
 
-typedef struct view_list{   //记录控件信息
+typedef struct view_list{   //记录控件信息，这玩意现在看来已经没啥用，后续看情况删或不删
     HWND handle;
-    //int id;
     CallbackList *callList;
 
     view_list *next;
 }ViewList;
 
 typedef struct activity_info{   //记录窗体信息
-    void* activity;
+    void* activity;     //窗口类指针
     ViewList *viewList;
-    //CallbackList *windowActList;
-    CallbackList *viewActList;
+    CallbackList *windowActList;    //窗体事件回调
+    CallbackList *viewActList;      //控件事件回调
 
     activity_info *next;
 }ActivityInfo;
@@ -46,12 +45,12 @@ void _simple_activity_new(void *activity){
     ActivityInfo *tmp = new ActivityInfo();
     tmp->activity = activity;
     //debug:
-    char tmpS[64] = {0};
+    /*char tmpS[64] = {0};
     wchar_t *tmpS2;
     sprintf(tmpS, "New Activity: %p", activity);
     tmpS2 = AnsiToUnicode(tmpS);
-    //MessageBoxW(0, tmpS2, L"SimpleUI Debug", MB_OK);
-    delete []tmpS2;
+    MessageBoxW(0, tmpS2, L"SimpleUI Debug", MB_OK);
+    delete []tmpS2;*/
     if(activityList == NULL){
         activityList = tmp;
     }else{
@@ -159,10 +158,14 @@ void _simple_callback_set(ViewList *view, int actId, ActCall callback){
     tmp->call_id = actId;
 }
 
-void _simple_callback_set(ActivityInfo *activity, int actId, ActCall callback){
+void _simple_callbackList_callback_set(ActivityInfo *activity, int actId, ActCall callback, char type){
     if(activity == NULL)
         return;
-    CallbackList *tmp = activity->viewActList;
+    CallbackList *tmp;
+    if(type)
+        tmp = activity->viewActList;
+    else
+        tmp = activity->windowActList;
     if(tmp){
         bool find = false;
         if(tmp->next) {
@@ -179,11 +182,24 @@ void _simple_callback_set(ActivityInfo *activity, int actId, ActCall callback){
             tmp = tmp->next;    //前置
         }
     }else{  //一个定义都没有
-        activity->viewActList = new CallbackList();
-        tmp = activity->viewActList;
+        if(type){
+            activity->viewActList = new CallbackList();
+            tmp = activity->viewActList;
+        }else{
+            activity->windowActList = new CallbackList();
+            tmp = activity->windowActList;
+        }
     }
     tmp->callback = callback;
     tmp->call_id = actId;
+}
+
+void _simple_callback_set(ActivityInfo *activity, int actId, ActCall callback){
+    _simple_callbackList_callback_set(activity, actId, callback, 1);
+}
+
+void _simple_activity_call_set(ActivityInfo *activity, int actId, ActCall callback){
+    _simple_callbackList_callback_set(activity, actId, callback, 0);
 }
 
 /** 清除回调记录表 **/
@@ -206,11 +222,11 @@ void _simple_view_clean(ViewList* list){
 void _simple_activity_delete(void *activity){
     ActivityInfo *tmp = activityList, *nextNode;
     //debug:
-    char tmpS[64] = {0};
+    /*char tmpS[64] = {0};
     wchar_t *tmpS2;
     sprintf(tmpS, "Delete Activity: %p", activity);
     tmpS2 = AnsiToUnicode(tmpS);
-    //MessageBoxW(0, tmpS2, L"SimpleUI Debug", MB_OK);
+    MessageBoxW(0, tmpS2, L"SimpleUI Debug", MB_OK);*/
     delete []tmpS2;
     while(tmp){
         if(tmp->next){
@@ -218,9 +234,8 @@ void _simple_activity_delete(void *activity){
                 nextNode = tmp->next->next;
                 if(tmp->next->viewList)
                     _simple_view_clean(tmp->next->viewList);    //删除活动信息前先清理控件和回调表
-                /*if(tmp->next->windowActList)
+                if(tmp->next->windowActList)
                     _simple_callback_clean(tmp->next->windowActList);
-                */
                 if(tmp->viewActList)
                     _simple_callback_clean(tmp->viewActList);
                 delete tmp->next;
@@ -231,9 +246,8 @@ void _simple_activity_delete(void *activity){
             if(tmp->activity == activity){
                 if(tmp->viewList)
                     _simple_view_clean(tmp->viewList);
-                /*if(tmp->windowActList)
+                if(tmp->windowActList)
                     _simple_callback_clean(tmp->windowActList);
-                */
                 if(tmp->viewActList)
                     _simple_callback_clean(tmp->viewActList);
                 delete tmp;
