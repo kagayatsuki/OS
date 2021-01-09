@@ -32,6 +32,7 @@
       <change beforePath="$PROJECT_DIR$/simpleUI/debug.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/simpleUI/debug.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/simpleUI/simple_activity.h" beforeDir="false" afterPath="$PROJECT_DIR$/simpleUI/simple_activity.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/simpleUI/simple_button.h" beforeDir="false" afterPath="$PROJECT_DIR$/simpleUI/simple_button.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/simpleUI/simple_window.h" beforeDir="false" afterPath="$PROJECT_DIR$/simpleUI/simple_window.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -77,7 +78,7 @@
       <workItem from="1610086654385" duration="8439000" />
       <workItem from="1610095476962" duration="3490000" />
       <workItem from="1610111724552" duration="7616000" />
-      <workItem from="1610170014090" duration="4018000" />
+      <workItem from="1610170014090" duration="5087000" />
     </task>
     <servers />
   </component>

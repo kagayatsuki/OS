@@ -105,7 +105,7 @@ simple_window::~simple_window() {
 }
 
 /** 获取活动信息重调 **/
-ActivityInfo *_simple_activity_find(HWND activity){
+SimpleActivity *_simple_activity_find(HWND activity){
     ActivityInfo *tmp = activityList;
     simple_window* tmp2;
     while(tmp){
@@ -121,8 +121,8 @@ ActivityInfo *_simple_activity_find(HWND activity){
 
 
 LRESULT WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
-    ActivityInfo *tActivity = _simple_activity_find(hWnd);
-    CallbackList *tCall = 0;
+    SimpleActivity *tActivity = _simple_activity_find(hWnd);
+    SimpleCall *tCall = 0;
     tCall = _simple_callback_find(tActivity, (int)message);
     switch(message)
     {
@@ -132,7 +132,7 @@ LRESULT WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
             tCall = _simple_callback_find(tActivity, wmId);
             if(tCall){
                 if (tCall->callback)
-                    tCall->callback(GetDlgItem(hWnd, wmId));
+                    tCall->callback(GetDlgItem(hWnd, wmId));    //回调传参为控件句柄
                 break;
             }else
                 return DefWindowProcW(hWnd,message,wParam,lParam);
@@ -160,9 +160,10 @@ LRESULT WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
             }
             break;
         default:
+            tCall = _simple_callback_find(tActivity, (int)message, 1);  //其它窗口事件
             if(tCall){
                 if(tCall->callback);
-                    //tCall->callback(hWnd);        //暂时不可这么直接写，因为会导致一些非窗口操作，比如控件事件也触发其无关回调
+                    tCall->callback(hWnd);
             }
             break;
     }

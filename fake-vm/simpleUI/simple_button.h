@@ -31,14 +31,19 @@ public:
     void setText(const char *text);
     void setSize(int width, int height);
     void setPosition(int x, int y);
-
     void setDefaultFont();
     void setFont(HFONT font);
+
+    void setCallback(ActCall callback);
 protected:
     HWND this_parent;
     HWND this_hwnd;
     int this_id;
 };
+
+void simple_button::setCallback(ActCall callback) {
+    _simple_callback_set(_simple_activity_find(this_parent), this_id, callback);
+}
 
 void simple_button::setFont(HFONT font) {
     SendMessageW(this_hwnd, WM_SETFONT, (WPARAM)font, 0);

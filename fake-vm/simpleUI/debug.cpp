@@ -28,10 +28,11 @@ int main(){
         MessageBoxW(0, L"无法创建主窗口,请尝试以命令行启动程序", L"提示", MB_OK);
     else{
         _simple_callback_set(_simple_activity_find(mWin), (int)WM_DESTROY, testCall);   //绑定窗口关闭时的函数
-        simple_button button1(mWin,3,buttonTest);
+        simple_button button1(mWin,3);
         button1.setText("test");
-        button1.setSize(100, 50);
-        button1.setPosition(50, 6);
+        button1.setSize(100, 28);
+        button1.setPosition(20, 16);
+        button1.setCallback(buttonTest);
         mainWin->show();
     }
     delete mainWin;
