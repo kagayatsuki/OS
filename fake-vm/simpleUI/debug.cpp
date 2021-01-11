@@ -20,14 +20,13 @@ void testCall(HWND hwnd){
 }
 
 int main(){
-    char* wTitle = "test window";
-    WCHAR *wTitle_t = AnsiToUnicode(wTitle);
+    WCHAR *wTitle_t = L"test window";
     simple_window* mainWin = new simple_window();
 
     if((mWin = mainWin->create(WS_OVERLAPPEDWINDOW,wTitle_t,CW_USEDEFAULT, 0, 400, 280, 0, 0)) == 0)
         MessageBoxW(0, L"无法创建主窗口,请尝试以命令行启动程序", L"提示", MB_OK);
     else{
-        _simple_callback_set(_simple_activity_find(mWin), (int)WM_DESTROY, testCall);   //绑定窗口关闭时的函数
+        mainWin->setCallback((int)WM_DESTROY, testCall);   //绑定窗口关闭时的函数
         simple_button button1(mWin,3);
         button1.setText("test");
         button1.setSize(100, 28);
@@ -36,27 +35,8 @@ int main(){
         mainWin->show();
     }
     delete mainWin;
-    delete[] wTitle_t;
     return 0;
 }
 
-int WINAPI WinMain(HINSTANCE hInstance,
-        HINSTANCE hPrevInstance,
-        LPWSTR    lpCmdLine,
-        int       nCmdShow)
-{
-    UNREFERENCED_PARAMETER(hPrevInstance);
-    UNREFERENCED_PARAMETER(lpCmdLine);
-    Simple_SethInstance(hInstance);
-    char* wTitle = "test window";
-    WCHAR *wTitle_t = AnsiToUnicode(wTitle);
-    simple_window* mainWin = new simple_window();
-    HWND mWin;
-    if((mWin = mainWin->create(WS_OVERLAPPEDWINDOW,wTitle_t,CW_USEDEFAULT, 0, 400, 280, 0, 0)) == 0)
-        printf("Can't create window\n");
-    else
-        mainWin->show();
-    delete mainWin;
-    delete[] wTitle_t;
-    return 0;
-}
+
+

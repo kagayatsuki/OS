@@ -9,7 +9,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <windows.h>
+#include <wchar.h>
 #include <tchar.h>
+#include <shellapi.h>
 #include "simple_unicode.h"
 #include "simple_activity.h"
 
@@ -31,6 +33,7 @@ public:
     void destroy();
     HWND hwnd(){return this_hwnd;};
 
+    void setCallback(int actId, ActCall callback);
 protected:
     HWND this_hwnd;
 private:
@@ -42,7 +45,13 @@ private:
     char cNameA[32];
 };
 
-LRESULT_W tmp;
+
+void simple_window::setCallback(int actId, ActCall callback) {
+    if(this_hwnd){
+        _simple_activity_call_set(_simple_activity_find(this), actId, callback);
+    }
+}
+
 simple_window::simple_window(){
     memset(cNameA, 0, 32);
     this_hwnd = 0;
@@ -64,7 +73,6 @@ simple_window::simple_window(){
     wndclass.lpszClassName = wClassName;
     cRegister = false;
     _simple_activity_new(this);
-    //RegisterClass(&wndclass);
 }
 
 void simple_window::show() {
@@ -123,7 +131,7 @@ SimpleActivity *_simple_activity_find(HWND activity){
 LRESULT WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
     SimpleActivity *tActivity = _simple_activity_find(hWnd);
     SimpleCall *tCall = 0;
-    tCall = _simple_callback_find(tActivity, (int)message);
+    tCall = _simple_callback_find(tActivity, (int)message, 1);
     switch(message)
     {
         case WM_COMMAND:    //此处接收窗口发生的事件，包括组件事件
@@ -160,8 +168,7 @@ LRESULT WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
             }
             break;
         default:
-            tCall = _simple_callback_find(tActivity, (int)message, 1);  //其它窗口事件
-            if(tCall){
+            if(tCall){      //其它窗口事件
                 if(tCall->callback);
                     tCall->callback(hWnd);
             }
