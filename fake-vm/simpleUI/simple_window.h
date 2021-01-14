@@ -141,9 +141,8 @@ LRESULT WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
             if(tCall){
                 if (tCall->callback)
                     tCall->callback(GetDlgItem(hWnd, wmId));    //回调传参为控件句柄
-                break;
-            }else
-                return DefWindowProcW(hWnd,message,wParam,lParam);
+            }
+            break;
         }
         case WM_PAINT:
         {
@@ -162,6 +161,7 @@ LRESULT WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
             if(tCall){          //调用者定义窗口将关闭时的过程函数
                 if(tCall->callback){
                     tCall->callback(hWnd);
+                    return 0;
                 }
             }else{          //默认过程
                 PostQuitMessage(0);
@@ -169,8 +169,10 @@ LRESULT WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
             break;
         default:
             if(tCall){      //其它窗口事件
-                if(tCall->callback);
+                if(tCall->callback){
                     tCall->callback(hWnd);
+                    return 0;
+                }
             }
             break;
     }
