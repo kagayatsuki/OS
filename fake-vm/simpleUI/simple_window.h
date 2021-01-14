@@ -10,8 +10,6 @@
 #include <string.h>
 #include <windows.h>
 #include <wchar.h>
-#include <tchar.h>
-#include <shellapi.h>
 #include "simple_unicode.h"
 #include "simple_activity.h"
 
@@ -34,6 +32,10 @@ public:
     HWND hwnd(){return this_hwnd;};
 
     void setCallback(int actId, ActCall callback);
+    void setTitle(const char *text);
+    void setTitle(const wchar_t *text);
+    void setSize(int width, int height);
+    void setPosition(int x, int y);
 protected:
     HWND this_hwnd;
 private:
@@ -43,8 +45,32 @@ private:
     HINSTANCE hInstance;
     bool cRegister;
     char cNameA[32];
+
+    wchar_t *buff_title;
 };
 
+void simple_window::setSize(int width, int height) {
+    tagRECT rect;
+    GetClientRect(this_hwnd, &rect);
+    MoveWindow(this_hwnd, rect.left, rect.top, width, height, true);
+}
+
+void simple_window::setPosition(int x, int y) {
+    tagRECT rect;
+    GetWindowRect(this_hwnd, &rect);
+    MoveWindow(this_hwnd, x, y, rect.right - rect.left, rect.bottom - rect.top, true);
+}
+
+void simple_window::setTitle(const char *text) {
+    if(buff_title)
+        delete[] buff_title;
+    buff_title = AnsiToUnicode(text);
+    SendMessageW(this_hwnd, WM_SETTEXT, 0, (LPARAM)buff_title);
+}
+
+void simple_window::setTitle(const wchar_t *text) {
+    SendMessageW(this_hwnd, WM_SETTEXT, 0, (LPARAM)text);
+}
 
 void simple_window::setCallback(int actId, ActCall callback) {
     if(this_hwnd){
@@ -55,6 +81,8 @@ void simple_window::setCallback(int actId, ActCall callback) {
 simple_window::simple_window(){
     memset(cNameA, 0, 32);
     this_hwnd = 0;
+    buff_title = 0;
+
     sprintf(cNameA, "simpleW%d", wCount++);
     wClassName = AnsiToUnicode(cNameA);
     wndclass.cbSize = sizeof(WNDCLASSEX);
@@ -72,6 +100,7 @@ simple_window::simple_window(){
     wndclass.lpszMenuName = NULL;
     wndclass.lpszClassName = wClassName;
     cRegister = false;
+
     _simple_activity_new(this);
 }
 
@@ -131,6 +160,9 @@ SimpleActivity *_simple_activity_find(HWND activity){
 LRESULT WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
     SimpleActivity *tActivity = _simple_activity_find(hWnd);
     SimpleCall *tCall = 0;
+
+    static HBRUSH hBrush = CreateSolidBrush(RGB(255, 255, 255));    //默认白色控件背景： 对于Static 等
+
     tCall = _simple_callback_find(tActivity, (int)message, 1);
     switch(message)
     {
@@ -157,6 +189,8 @@ LRESULT WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
             }
             break;
         }
+        case WM_CTLCOLORSTATIC:
+            return (LRESULT)hBrush;
         case WM_DESTROY:
             if(tCall){          //调用者定义窗口将关闭时的过程函数
                 if(tCall->callback){
