@@ -28,13 +28,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0df593ab-be7c-415e-b341-0a98a0061055" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/simpleUI/simple_text.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/simpleUI/simple_view.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/include/memdebug.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/include/memory.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/simpleUI/simple_edit.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/simpleUI/debug.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/simpleUI/debug.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/simpleUI/simple_button.h" beforeDir="false" afterPath="$PROJECT_DIR$/simpleUI/simple_button.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/simpleUI/simple_style.h" beforeDir="false" afterPath="$PROJECT_DIR$/simpleUI/simple_style.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/simpleUI/simple_window.h" beforeDir="false" afterPath="$PROJECT_DIR$/simpleUI/simple_window.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/register.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/stack.h" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -66,13 +65,6 @@
       <recent name="G:\repo\OS\fake-vm\simpleUI" />
     </key>
   </component>
-  <component name="RunManager">
-    <configuration default="true" type="GradleAppRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true">
-      <method v="2">
-        <option name="com.jetbrains.cidr.cpp.gradle.execution.GradleNativeBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -90,7 +82,10 @@
       <workItem from="1610170014090" duration="6977000" />
       <workItem from="1610340329252" duration="1287000" />
       <workItem from="1610599037207" duration="1803000" />
-      <workItem from="1610612000720" duration="4738000" />
+      <workItem from="1610612000720" duration="5337000" />
+      <workItem from="1610719077709" duration="2864000" />
+      <workItem from="1610889331913" duration="6726000" />
+      <workItem from="1610968118674" duration="19000" />
     </task>
     <servers />
   </component>
@@ -110,6 +105,10 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
+    <state x="690" y="271" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1610890056691">
+      <screen x="0" y="0" width="1920" height="1050" />
+    </state>
+    <state x="690" y="271" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1920.1050@0.0.1920.1050" timestamp="1610890056691" />
     <state x="623" y="227" width="672" height="678" key="search.everywhere.popup" timestamp="1610112864287">
       <screen x="0" y="0" width="1920" height="1050" />
     </state>

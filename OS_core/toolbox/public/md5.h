@@ -218,7 +218,7 @@ namespace toolbox_md5
 }
 
 //any exception return -1, success return 0
-int _core_toolbox_md5_get(char* source, unsigned char** buffer){
+int _core_toolbox_md5_string_get(char* source, unsigned char** buffer){
     if(!source) return -1;
     unsigned char* rt = (unsigned char*)malloc(33);
     unsigned char tmp[16];
@@ -233,6 +233,19 @@ int _core_toolbox_md5_get(char* source, unsigned char** buffer){
     }
     rt[32] = '\0';
     *buffer = rt;
+    return 0;
+}
+
+int _core_toolbox_md5_get(char* source, unsigned char* buffer){
+    if(!source) return -1;
+    unsigned char tmp[16];
+    toolbox_md5::MD5_CTX md5;
+    toolbox_md5::MD5Init(&md5);
+    toolbox_md5::MD5Update(&md5, (unsigned char*)source, strlen(source));
+    toolbox_md5::MD5Final(&md5, tmp);
+    for(int i = 0; i < 16; i++){
+        buffer[i]=tmp[i];
+    }
     return 0;
 }
 
