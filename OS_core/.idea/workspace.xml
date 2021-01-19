@@ -28,17 +28,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e7aeb3db-4a07-4729-b870-5e63b1e11f45" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/toolbox/public/aes128.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../fake-vm/include/memdebug.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../fake-vm/include/memory.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../fake-vm/simpleUI/simple_edit.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/clion-log.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/toolbox/public/debug_public_tool.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/toolbox/public/debug_public_tool.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/toolbox/public/md5.h" beforeDir="false" afterPath="$PROJECT_DIR$/toolbox/public/md5.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../fake-vm/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../fake-vm/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../fake-vm/include/register.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../fake-vm/include/stack.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/toolbox/public/aes128.h" beforeDir="false" afterPath="$PROJECT_DIR$/toolbox/public/aes128.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -70,9 +61,9 @@
     </key>
   </component>
   <component name="RunManager">
-    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true">
+    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true">
       <method v="2">
-        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
     <configuration default="true" type="GradleAppRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true">
@@ -115,6 +106,7 @@
       <workItem from="1608900746773" duration="84000" />
       <workItem from="1610086574421" duration="78000" />
       <workItem from="1610968140076" duration="10683000" />
+      <workItem from="1611045138537" duration="84000" />
     </task>
     <servers />
   </component>

@@ -396,15 +396,6 @@ void Decrypt_AES128(void *buffer, void *data, unsigned int dat_len, char *key){
         for(t = 0; t < 16; t++)
             ((unsigned char *)buffer)[i*16+t] = (char)tmp[t].to_ulong();
     }
-    /*
-    i = dat_len / 16 * 16;
-    if(dat_len % 16){
-        for(int t = 0; t < 16; t++)
-            blank[t] = ((unsigned char *)data)[i+t];
-        AES128_decrypt(blank, w);
-        for(int t = 0; t < dat_len % 16; t++)
-            ((unsigned char *)buffer)[i+t] = (char)blank[t].to_ulong();
-    }*/
 }
 
 #endif //OS_CORE_AES128_H
