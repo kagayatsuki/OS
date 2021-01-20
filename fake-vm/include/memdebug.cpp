@@ -4,6 +4,7 @@
 
 #include <stdio.h>
 #include "memory.h"
+#include "calls.h"
 
 #define TEST_SEG 2
 #define TEST_OFF 0x0FFF
@@ -13,7 +14,7 @@
 #define TEST_SET_LEN 8
 
 int main(){
-    fakeVM_memory Mem(0x5000);
+    fakeVM_memory Mem(0x10000);
     char gets_tmp[32] = {0};
     printf("[init] Init memory unit.\n");
     if(Mem.init()){
@@ -21,11 +22,13 @@ int main(){
         return 0;
     }else
         printf("[init] Succeed.\n");
-    Mem.set(TEST_SEG, TEST_OFF, TEST_SET_DATA, TEST_SET_LEN);
-    printf("Seg %d, Off %d Were set\n");
-    char tmp = Mem.get(READ_SEG, READ_OFF);
-    Mem.gets(TEST_SEG, TEST_OFF, TEST_SET_LEN, gets_tmp);
-    printf("Seg %d, Off %d:[%d]  %s\n", TEST_SEG, TEST_OFF, TEST_SET_LEN, gets_tmp);
-    //printf("Seg %d, Off %d: %d | %c\n", READ_SEG, READ_OFF, tmp, tmp);
+
+    char temp_string[18] = "This is a string\n";
+    vm_call_memcpy(&Mem, 0x0004, 0x0000, temp_string, 18);
+    uint16_t temp_p = 0x0004;
+    Mem.push(sizeof(uint16_t), &temp_p);
+    temp_p = 0x0000;
+    Mem.push(sizeof(uint16_t), &temp_p);
+    vm_call_print(&Mem);
     return 0;
 }

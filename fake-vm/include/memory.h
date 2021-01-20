@@ -37,6 +37,8 @@ class fakeVM_memory{
     void operator_split(uint32_t &first, uint32_t &mid_c, uint32_t &final, uint16_t offset, uint32_t size);
 protected:
     int err_num;    //操作返回码
+    uint16_t stack_base_seg, stack_ptr;
+
 public:
     fakeVM_memory(){memory_size = fakeVM_memory_default; mmap = 0;}
     fakeVM_memory(uint32_t mem_size){memory_size = mem_size; mmap = 0;}
@@ -48,7 +50,99 @@ public:
     char get(uint16_t segment, uint16_t offset);    //读一个字节
     uint32_t gets(uint16_t segment, uint16_t offset, uint32_t size, void* ptr);    //复制一段内存到buffer
     void* getAddr_unsafe(vm_ptr ptr);   //获取映射的真实地址(对于操作系统仍是虚拟地址) - 不安全方法
+
+    void pop(uint16_t size, void *buffer);
+    void push(uint16_t size, void *buffer);
 };
+
+void fakeVM_memory::push(uint16_t size, void *buffer) {
+    if(size > memory_size - (stack_base_seg * fakeVM_memory_segment + stack_ptr))   //+1是因为push实际从当前偏移的后一位开始压入
+        return;
+
+    //debug
+    printf("[push %d] ", size);
+    /** 偏移越到下一段 **/
+    if(size > (0x1000 - stack_ptr)){    //数据长度超过当前段偏移后的剩余空间
+        int mid_c = size - (0x1000 - stack_ptr);    //跳到下一段压入的字节数
+        if(buffer){
+            int i = 0;
+            for(; i < 0x1000 - stack_ptr; i++) {
+                set(stack_base_seg + 0x0000, stack_ptr + i, *((char *) buffer + (size - i - 1)), 1);
+                printf("%02x ", *((char *) buffer + (size - i - 1)));
+            }
+            for(int t = 0; t < mid_c; t++) {
+                set(stack_base_seg + 0x0001, t + 0x0000, *((char *) buffer + (size - i - t - 1)), 1); //这上下俩的0x0000只是为了代码好看
+                printf("%02x ", *((char *) buffer + (size - i - t - 1)));
+            }
+        }
+        stack_base_seg += 1;
+        stack_ptr = mid_c;
+    }else{
+        /** 偏移仅在此段中 **/
+        if(buffer){
+            int i = 0;
+            for(; i < size; i++){
+                set(stack_base_seg, stack_ptr + i, *((char*)buffer + (size - i - 1)), 1);
+                printf("%02x ", *((char *) buffer + (size - i - 1)));
+            }
+        }
+        stack_ptr += size;
+    }
+
+    if(stack_ptr >= 0x1000){
+        stack_ptr -= 0x1000;
+        stack_base_seg+=1;
+    }
+
+    //debug
+    printf("\n[push %d] now seg: %d offset: %d\n", size, stack_base_seg, stack_ptr);
+}
+
+/** 规范size不应当是一个较大的数，应保持 0 > size >= 32 **/
+void fakeVM_memory::pop(uint16_t size, void *buffer) {
+    if(size > stack_base_seg * fakeVM_memory_segment + stack_ptr)   //越界检查
+        return;
+
+    //debug
+    printf("[pop %d] ", size);
+
+    if(stack_ptr == 0x0000){
+        stack_base_seg -= 1;
+        stack_ptr = 0x0FFF;
+    }else{
+        stack_ptr -= 1;
+    }
+
+    if(size > (stack_ptr + 1)){
+        /** 如果要读取的长度要读到上一段 **/
+        int mid_c = size - stack_ptr - 1;   //跳到上一段后要读取的字节数
+        if(buffer){
+            int i = 0;
+            for(; i <= stack_ptr; i++) {
+                *((char *) buffer + i) = get(stack_base_seg - 0x0000, stack_ptr - i);
+                printf("%02x ", *((char *) buffer + i));
+            }
+            for(int t = 0; t < mid_c; t++){
+                *((char*)buffer + i + t) = get(stack_base_seg - 0x0001, 0x0FFF - t);
+                printf("%02x ", *((char *) buffer + i + t));
+            }
+        }
+        stack_base_seg -= 1;
+        stack_ptr = 0x1000 - mid_c;
+    } else{
+        /** 读取长度在当前段内 **/
+        if(buffer){
+            for(int i = 0; i < size; i++) {
+                *((char *) buffer + i) = get(stack_base_seg, stack_ptr - i);
+                printf("%02x ", *((char *) buffer + i));
+            }
+        }
+        stack_ptr -= (size - 1);
+    }
+
+    //debug
+    printf("[pop %d] now seg: %d offset: %d\n", size, stack_base_seg, stack_ptr);
+}
 
 void * fakeVM_memory::getAddr_unsafe(vm_ptr ptr) {
     uint16_t seg, off;
@@ -203,6 +297,14 @@ int fakeVM_memory::init() {
         }
     }
     //printf("[init] Seg0 : %p\n", mmap->segment_ptr);
+    /** 安排栈占据的内存区域, 目前按固定比例占据 **/
+    stack_ptr = 0x0000;
+    if(segment_c > 0x0010){
+        stack_base_seg = segment_c / 3 + ((segment_c % 3) ? 1 : 0);
+    } else{
+        stack_base_seg = segment_c - 1;
+    }
+
     return 0;
 }
 
