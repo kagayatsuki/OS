@@ -16,7 +16,7 @@ void vm_call_print(fakeVM_memory *mem){
     if(mem){
         mem->pop(sizeof(uint16_t), &ptr);
         mem->pop(sizeof(uint16_t), &seg);
-        printf("[printf] seg: %d offset: %d\n", seg, ptr);
+        CC_DEBUG printf("[printf] seg: %d offset: %d\n", seg, ptr);
         addr = seg * fakeVM_memory_segment + ptr;
         char tmp = mem->get(seg, ptr);
         while(tmp != 0){
@@ -40,18 +40,21 @@ void vm_call_memcpy(fakeVM_memory *mem){
         mem->pop(sizeof(uint16_t), &seg_src);
         addr_src = seg_src * fakeVM_memory_segment + ptr_src;
         mem->pop(sizeof(uint16_t), &cp_size);
-        if(!(seg_src & ptr_des & seg_des & ptr_src))    //基本空指针判断
-            return;
+
         //TODO: 优化内存复制算法
+        //debug
+        CC_DEBUG printf("[memcpy %d] ", cp_size);
         char tmp;
         for(; cp_size > 0; cp_size--){  //先用着这个低效率的方法，之后想办法优化
             tmp = mem->get(seg_src, ptr_src);
             mem->set(seg_des, ptr_des, tmp, 1);
+            CC_DEBUG printf("%02x ", mem->get(seg_des, ptr_des));
             addr_des++;
             addr_src++;
             mem->addr(seg_des, ptr_des, addr_des);
             mem->addr(seg_src, ptr_src, addr_src);
         }
+        CC_DEBUG putchar('\n');
     }
 }
 
@@ -60,18 +63,23 @@ void vm_call_memcpy(fakeVM_memory *mem, uint16_t seg, uint16_t offset, void* src
     uint32_t addr_des;
 
     //debug
-    printf("[vCall memcpy %d] ", size);
+    CC_DEBUG printf("[memcpy %d] ", size);
     //TODO: 优化内存复制算法
     if(mem && src){
         addr_des = seg_des * fakeVM_memory_segment + ptr_des;
         for(int i = 0; i < size; i++){
             mem->set(seg_des, ptr_des, *((char*)src + i), 1);
-            printf("%02x ", mem->get(seg_des, ptr_des));
+            CC_DEBUG printf("%02x ", mem->get(seg_des, ptr_des));
             addr_des++;
             mem->addr(seg_des, ptr_des, addr_des);
         }
-        putchar('\n');
+        CC_DEBUG putchar('\n');
     }
+}
+
+void vm_call_func(fakeVM_memory *mem){
+
+
 }
 
 #endif //FAKE_VM_CALLS_H

@@ -4,5 +4,6 @@ OS_core/toolbox/Release/logcat.exe
 OS_core/toolbox/public/a.exe
 OS_core/sys/log/*
 OS_core/log/server_info.h
+fake-vm/include/a.exe
 fake-vm/.idea/*
 fake-vm/simpleUI/a.exe

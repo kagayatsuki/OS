@@ -21,13 +21,31 @@ int main(){
         printf("[init] Failed.\n");
         return 0;
     }else
-        printf("[init] Succeed.\n");
+        printf("[init] Succeed.\n\n");
 
-    char temp_string[18] = "This is a string\n";
-    vm_call_memcpy(&Mem, 0x0004, 0x0000, temp_string, 18);
-    uint16_t temp_p = 0x0004;
-    Mem.push(sizeof(uint16_t), &temp_p);
+    memory_debug_print = false;
+
+    uint16_t temp_p = 0x003E;
+    char temp_string[] = "I try to write a string as long as very long, just for test.\n";
+    vm_call_memcpy(&Mem, 0x0004, 0x0000, temp_string, 62);      //外部内存向内部复制方法
+    Mem.push(sizeof(uint16_t), &temp_p);    //复制长度入栈
+    temp_p = 0x0004;
+    Mem.push(sizeof(uint16_t), &temp_p);    //源段入栈
     temp_p = 0x0000;
+    Mem.push(sizeof(uint16_t), &temp_p);    //源偏移入栈
+    temp_p = 0x0004;
+    Mem.push(sizeof(uint16_t), &temp_p);    //目标段入栈
+    temp_p = 0x003E;
+    Mem.push(sizeof(uint16_t), &temp_p);    //目标偏移入栈
+    vm_call_memcpy(&Mem);       //内部 内存复制方法
+    temp_p = 0x0004;
+    Mem.push(sizeof(uint16_t), &temp_p);    //print的参数-源段 入栈
+    temp_p = 0x0000;
+    Mem.push(sizeof(uint16_t), &temp_p);    //print的参数-源偏移 入栈
+    vm_call_print(&Mem);    //执行print
+    temp_p = 0x0004;
+    Mem.push(sizeof(uint16_t), &temp_p);    //同上方print的参数入栈
+    temp_p = 0x003E;    //复制的字符串偏移
     Mem.push(sizeof(uint16_t), &temp_p);
     vm_call_print(&Mem);
     return 0;

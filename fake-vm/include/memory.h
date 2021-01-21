@@ -21,12 +21,16 @@ typedef unsigned long vm_ptr;       //内存指针
 #define CC_SEGMENT if(segment + 1 > memory_size / fakeVM_memory_segment + ((memory_size % fakeVM_memory_segment) ? 1 : 0)){ err_num = -3; return -1;}
 #define CC_SEGMENT_U if(segment + 1 > memory_size / fakeVM_memory_segment + ((memory_size % fakeVM_memory_segment) ? 1 : 0)){ err_num = -3; return 0;}
 
+#define CC_DEBUG if(memory_debug_print)
+
 #define ERR_RESET err_num = 0;
 
 typedef struct fakeVM_memtab{
     char *segment_ptr;
     fakeVM_memtab *next_node;
 }mem_map;
+
+static bool memory_debug_print = true;
 
 class fakeVM_memory{
     uint32_t memory_size;
@@ -60,7 +64,7 @@ void fakeVM_memory::push(uint16_t size, void *buffer) {
         return;
 
     //debug
-    printf("[push %d] ", size);
+    CC_DEBUG printf("[push %d] ", size);
     /** 偏移越到下一段 **/
     if(size > (0x1000 - stack_ptr)){    //数据长度超过当前段偏移后的剩余空间
         int mid_c = size - (0x1000 - stack_ptr);    //跳到下一段压入的字节数
@@ -68,11 +72,11 @@ void fakeVM_memory::push(uint16_t size, void *buffer) {
             int i = 0;
             for(; i < 0x1000 - stack_ptr; i++) {
                 set(stack_base_seg + 0x0000, stack_ptr + i, *((char *) buffer + (size - i - 1)), 1);
-                printf("%02x ", *((char *) buffer + (size - i - 1)));
+                CC_DEBUG printf("%02x ", *((char *) buffer + (size - i - 1)));
             }
             for(int t = 0; t < mid_c; t++) {
                 set(stack_base_seg + 0x0001, t + 0x0000, *((char *) buffer + (size - i - t - 1)), 1); //这上下俩的0x0000只是为了代码好看
-                printf("%02x ", *((char *) buffer + (size - i - t - 1)));
+                CC_DEBUG printf("%02x ", *((char *) buffer + (size - i - t - 1)));
             }
         }
         stack_base_seg += 1;
@@ -83,7 +87,7 @@ void fakeVM_memory::push(uint16_t size, void *buffer) {
             int i = 0;
             for(; i < size; i++){
                 set(stack_base_seg, stack_ptr + i, *((char*)buffer + (size - i - 1)), 1);
-                printf("%02x ", *((char *) buffer + (size - i - 1)));
+                CC_DEBUG printf("%02x ", *((char *) buffer + (size - i - 1)));
             }
         }
         stack_ptr += size;
@@ -95,7 +99,7 @@ void fakeVM_memory::push(uint16_t size, void *buffer) {
     }
 
     //debug
-    printf("\n[push %d] now seg: %d offset: %d\n", size, stack_base_seg, stack_ptr);
+    CC_DEBUG printf("    [push %d] now seg: %d offset: %d\n", size, stack_base_seg, stack_ptr);
 }
 
 /** 规范size不应当是一个较大的数，应保持 0 > size >= 32 **/
@@ -104,7 +108,7 @@ void fakeVM_memory::pop(uint16_t size, void *buffer) {
         return;
 
     //debug
-    printf("[pop %d] ", size);
+    CC_DEBUG printf("[pop %d] ", size);
 
     if(stack_ptr == 0x0000){
         stack_base_seg -= 1;
@@ -120,11 +124,11 @@ void fakeVM_memory::pop(uint16_t size, void *buffer) {
             int i = 0;
             for(; i <= stack_ptr; i++) {
                 *((char *) buffer + i) = get(stack_base_seg - 0x0000, stack_ptr - i);
-                printf("%02x ", *((char *) buffer + i));
+                CC_DEBUG printf("%02x ", *((char *) buffer + i));
             }
             for(int t = 0; t < mid_c; t++){
                 *((char*)buffer + i + t) = get(stack_base_seg - 0x0001, 0x0FFF - t);
-                printf("%02x ", *((char *) buffer + i + t));
+                CC_DEBUG printf("%02x ", *((char *) buffer + i + t));
             }
         }
         stack_base_seg -= 1;
@@ -134,14 +138,14 @@ void fakeVM_memory::pop(uint16_t size, void *buffer) {
         if(buffer){
             for(int i = 0; i < size; i++) {
                 *((char *) buffer + i) = get(stack_base_seg, stack_ptr - i);
-                printf("%02x ", *((char *) buffer + i));
+                CC_DEBUG printf("%02x ", *((char *) buffer + i));
             }
         }
         stack_ptr -= (size - 1);
     }
 
     //debug
-    printf("[pop %d] now seg: %d offset: %d\n", size, stack_base_seg, stack_ptr);
+    CC_DEBUG printf("    [pop %d] now seg: %d offset: %d\n", size, stack_base_seg, stack_ptr);
 }
 
 void * fakeVM_memory::getAddr_unsafe(vm_ptr ptr) {
