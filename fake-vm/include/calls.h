@@ -10,7 +10,8 @@
 #include <stdlib.h>
 #include "memory.h"
 
-void vm_call_print(fakeVM_memory *mem){
+void vm_call_print(void *mem_p){
+    fakeVM_memory *mem = (fakeVM_memory *)mem_p;
     uint16_t seg, ptr;
     uint32_t addr;
     if(mem){
@@ -28,7 +29,8 @@ void vm_call_print(fakeVM_memory *mem){
     }
 }
 
-void vm_call_memcpy(fakeVM_memory *mem){
+void vm_call_memcpy(void *mem_p){
+    fakeVM_memory *mem = (fakeVM_memory *)mem_p;
     uint16_t seg_des, ptr_des, seg_src, ptr_src;
     uint32_t addr_des, addr_src;
     uint16_t cp_size;
@@ -58,7 +60,7 @@ void vm_call_memcpy(fakeVM_memory *mem){
     }
 }
 
-void vm_call_memcpy(fakeVM_memory *mem, uint16_t seg, uint16_t offset, void* src, uint16_t size){
+void vm_call_memcpy_ex(fakeVM_memory *mem, uint16_t seg, uint16_t offset, void* src, uint16_t size){
     uint16_t seg_des = seg, ptr_des = offset;
     uint32_t addr_des;
 

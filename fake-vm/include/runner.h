@@ -53,6 +53,8 @@ void fakeVM_runner::_CodeExplain(unsigned char code_t, Code_Conf conf) {
     uint16_t Param16A = 0, Param16B = 0;
     uint32_t Param32A = 0, Param32B = 0;
     uint16_t ParamSeg = 0, ParamOff = 0;
+    char *ParamTemp = 0;
+    CC_DEBUG printf("[runner 0x%02x] op_size: %d\n", code_t, conf.operatorSize);
     if(code_t == 32){   //Int
         thisMemory->addr(ParamSeg, ParamOff, thisRegister.code_ptr + 0x0002);   //获取中断编号
         thisMemory->gets(ParamSeg, ParamOff, sizeof(unsigned char), &Param8A);
@@ -63,12 +65,43 @@ void fakeVM_runner::_CodeExplain(unsigned char code_t, Code_Conf conf) {
             return;
         }
         thisIntList->Int(Param8A, thisMemory);
+        _CodePosition(thisRegister.code_ptr + 0x0003);
         return;
     }else{
+        uint32_t code_off = 0;
         switch (code_t) {
-            case 0x10:
-
+            case 0x10:  //push
+            {
+                ParamTemp = new char[conf.operatorSize];    //临时内存
+                thisMemory->addr(ParamSeg, ParamOff, thisRegister.code_ptr + 0x0002);   //首个操作数必然从指令地址+2处开始
+                if (conf.operatorA_addressing) {  //操作数是地址
+                    thisMemory->gets(ParamSeg, ParamOff, sizeof(uint16_t), &Param16A);  //段参数
+                    thisMemory->addr(ParamSeg, ParamOff, thisRegister.code_ptr + 0x0004);
+                    thisMemory->gets(ParamSeg, ParamOff, sizeof(uint16_t), &Param16B);  //偏移参数
+                    thisMemory->gets(Param16A + exi_m->data_seg, Param16B, conf.operatorSize,
+                                     ParamTemp); //寻址(基址为data_seg) 得数据至临时内存
+                    thisMemory->push(conf.operatorSize, ParamTemp); //寻址数据压栈
+                    code_off += 0x0002 + sizeof(uint32_t);
+                } else if (conf.operatorA_register) {  //操作数是寄存器   此模式下,operatorSize的后2位记录寄存器id,前2位记录间接寻址时的操作字节数(上限3)
+                    if (conf.operatorB_addressing) {  //间接寻址
+                        ParamSeg = ((uint16_t) thisRegister.X[(conf.operatorSize & 0x02)] >> 0x10) & 0xFFFF; //前两个字节是段参数
+                        ParamOff = ((uint16_t) thisRegister.X[(conf.operatorSize & 2)] & 0xFFFF);    //后两个字节是偏移参数
+                        thisMemory->gets(ParamSeg + exi_m->data_seg, ParamOff, (conf.operatorSize >> 0x02),
+                                         uniBuffer + uniBuffer_used);
+                        thisMemory->push((conf.operatorSize >> 0x02), uniBuffer + uniBuffer_used);  //间接寻址数据压栈
+                    } else {
+                        thisMemory->push(sizeof(unsigned int), &thisRegister.X[(conf.operatorSize & 0x02)]); //寄存器数据压栈
+                    }
+                    code_off += 0x0002;
+                } else {  //操作数是立即数
+                    thisMemory->gets(ParamSeg, ParamOff, conf.operatorSize, ParamTemp);     //获取立即数
+                    thisMemory->push(conf.operatorSize, ParamTemp); //立即数压栈
+                    code_off += 0x0002 + conf.operatorSize;
+                }
+                delete[] ParamTemp;
+                _CodePosition(thisRegister.code_ptr + code_off);
                 return;
+            }
             default:
                 Running = 0;
                 ExitCode = -9999;
@@ -96,7 +129,7 @@ void fakeVM_runner::_MainThread() {
         thisMemory->addr(run_seg, run_ptr, thisRegister.code_ptr);
         thisMemory->addr(conf_seg, conf_ptr, thisRegister.code_ptr + 1);
     }
-    CC_DEBUG printf("Program has exited. Code: %d\n", ExitCode);
+    printf("Program has exited. Code: %d\n", ExitCode); //暂时不算做调试输出
 }
 
 bool fakeVM_runner::_ImageCheck() {
@@ -153,22 +186,22 @@ bool fakeVM_runner::_ImageCheck() {
     int ci = 0, cMod = exi_m->code_length % fakeVM_memory_segment;
     for(; ci < exi_m->code_length / fakeVM_memory_segment; ci++){     //载入代码
         fread(buff, fakeVM_memory_segment, 1, tmp);
-        vm_call_memcpy(thisMemory, ci, 0, buff, fakeVM_memory_segment);
+        vm_call_memcpy_ex(thisMemory, ci, 0, buff, fakeVM_memory_segment);
     }
     if(cMod){
         fread(buff, cMod, 1, tmp);
-        vm_call_memcpy(thisMemory, ci, 0, buff, cMod);
+        vm_call_memcpy_ex(thisMemory, ci, 0, buff, cMod);
         ci++;
     }
     fseek(tmp, exi_l->data_offset, SEEK_SET);
     int di = 0, dMod = exi_m->data_length % fakeVM_memory_segment;
     for(; di < exi_m->data_length / fakeVM_memory_segment; di++){       //载入数据
         fread(buff, fakeVM_memory_segment, 1, tmp);
-        vm_call_memcpy(thisMemory, di + exi_m->data_seg, 0, buff, fakeVM_memory_segment);
+        vm_call_memcpy_ex(thisMemory, di + exi_m->data_seg, 0, buff, fakeVM_memory_segment);
     }
     if(dMod){
         fread(buff, dMod, 1, tmp);
-        vm_call_memcpy(thisMemory, di + exi_m->data_seg, 0, buff, dMod);
+        vm_call_memcpy_ex(thisMemory, di + exi_m->data_seg, 0, buff, dMod);
     }
     delete [] buff;
     fclose(tmp);
@@ -205,8 +238,8 @@ fakeVM_runner::fakeVM_runner(void *image_mem, uint16_t entry, uint16_t code_size
             exi_m->data_length = data_size;
             exi_m->data_seg = code_size / fakeVM_memory_segment + 1;
             /** 复制代码到内存(memory类的0x00000000开始) **/
-            vm_call_memcpy(thisMemory, 0x0000, 0x0000, image_mem, code_size);
-            vm_call_memcpy(thisMemory, exi_m->data_seg, 0x0000, (void *)((unsigned long long)image_mem + code_size), data_size);
+            vm_call_memcpy_ex(thisMemory, 0x0000, 0x0000, image_mem, code_size);
+            vm_call_memcpy_ex(thisMemory, exi_m->data_seg, 0x0000, ((char *)image_mem + code_size), data_size);
             /** 初始化默认模拟中断表 **/
             _InitDefaultInterrupt();
         }

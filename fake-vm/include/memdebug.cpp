@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include "memory.h"
 #include "calls.h"
+#include "runner.h"
 
 #define TEST_SEG 2
 #define TEST_OFF 0x0FFF
@@ -14,6 +15,7 @@
 #define TEST_SET_LEN 8
 
 int main(){
+    /*
     fakeVM_memory Mem(0x10000);
     char gets_tmp[32] = {0};
     printf("[init] Init memory unit.\n");
@@ -48,5 +50,20 @@ int main(){
     temp_p = 0x003E;    //复制的字符串偏移
     Mem.push(sizeof(uint16_t), &temp_p);
     vm_call_print(&Mem);
+    */
+    memory_debug_print = false;
+    unsigned char testCode[64] = {0x10, 0x02, 0x01, 0x00,               //PUSH  0x0001      字符串段入栈
+                                  0x10, 0x02, 0x00, 0x00,               //PUSH  0x0000      字符串偏移入栈
+                                  0x20, 0x00, 0x01,                     //INT   0x01        中断0x01 输出栈中参数所指字符串
+                                  0x10, 0x04, 0x00, 0x00, 0x00, 0x00,   //PUSH  0x00000000  return 0
+                                  0x20, 0x00, 0x00,                     //INT   0x00        中断0x00 程序终止
+                                  'H', 'E', 'L', 'L', 'O', ' ', 'W', 'O', 'R', 'L', 'D', '\n', '\0'};   //数据段 0x0014起
+    fakeVM_runner Runner(testCode, 0x0000, 0x0014, 0x000D);
+    if(Runner.LaunchEntry()){
+        printf("done.\n");
+    } else{
+        printf("failed.\n");
+    }
+
     return 0;
 }

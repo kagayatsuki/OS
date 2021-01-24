@@ -24,15 +24,15 @@ typedef struct {
 
 typedef struct{
     unsigned int code_ptr;
-    unsigned int A, B, C, D;
+    unsigned int X[4];
 }Runtime_register;
 
 typedef struct{
+    unsigned char operatorSize:4;     //操作数A&B的大小(bytes)需要相等,但不同指令可以有不同规范
     bool operatorA_register:1;  //操作数A是寄存器
     bool operatorB_register:1;  //操作数B是寄存器
     bool operatorA_addressing:1;    //操作数A进行寻址
     bool operatorB_addressing:1;    //操作数B进行寻址
-    unsigned char operatorSize:4;     //操作数A&B的大小(bytes)需要相等,但不同指令可以有不同规范
 }Code_Conf;
 
 #endif //FAKE_VM_TYPE_H

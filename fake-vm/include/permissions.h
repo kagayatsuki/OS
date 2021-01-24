@@ -64,32 +64,32 @@ RuntimePermission::~RuntimePermission() {
 
 bool RuntimePermission::LocalFile(runtime_token *sync) {
     if(token_check(sync) == 0)return this_permission->localFile;
-    return this_permission->localFile = *sync->flag;
+    return this_permission->localFile = sync->flag;
 }
 
 bool RuntimePermission::LocalFileCrossDomain(runtime_token *sync) {
     if(token_check(sync) == 0)return this_permission->localFile_CrossDomain;
-    return this_permission->localFile_CrossDomain = *sync->flag;
+    return this_permission->localFile_CrossDomain = sync->flag;
 }
 
 bool RuntimePermission::LocalFileReal(runtime_token *sync) {
     if(token_check(sync) == 0)return this_permission->localFile_Real;
-    return this_permission->localFile_Real = *sync->flag;
+    return this_permission->localFile_Real = sync->flag;
 }
 
 bool RuntimePermission::Network(runtime_token *sync) {
     if(token_check(sync) == 0)return this_permission->network;
-    return this_permission->network = *sync->flag;
+    return this_permission->network = sync->flag;
 }
 
 bool RuntimePermission::ChangeSetting(runtime_token *sync) {
     if (token_check(sync) == 0)return this_permission->changeSetting;
-    return this_permission->changeSetting = *sync->flag;
+    return this_permission->changeSetting = sync->flag;
 }
 
 bool RuntimePermission::MemoryAutonomous(runtime_token *sync) {
     if(token_check(sync) == 0)return this_permission->memoryAutonomous;
-    return this_permission->memoryAutonomous = *sync->flag;
+    return this_permission->memoryAutonomous = sync->flag;
 }
 
 //令牌检查,用于防止通常情况下应用自行篡改权限,除非"特赦"了宿主令牌
