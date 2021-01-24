@@ -26,6 +26,7 @@ struct runtime_permission{
 };
 
 class RuntimePermission{
+public:
     RuntimePermission(runtime_token *hostToken, runtime_token *applicationToken);
     ~RuntimePermission();
 protected:

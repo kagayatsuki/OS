@@ -9,24 +9,29 @@
 #include "memory.h"
 #include "type.h"
 
-class FakeVM_Interrupter{
-    FakeVM_Interrupter();
-    void SetInt(vm_ptr func, unsigned char id);
-    vm_ptr Int(unsigned char id);
+class fakeVM_Interrupter{
+    fakeVM_Interrupter();
+    void SetInt(vm_call func, unsigned char id);
+    void Int(unsigned char id, fakeVM_memory *mem);
 private:
-    vm_ptr interruptFuncs[256];
+    vm_call interruptFuncs[255];    //0号中断固定为终止程序
 };
 
-FakeVM_Interrupter::FakeVM_Interrupter() {
-    memset(interruptFuncs, 0, sizeof(vm_ptr)*256);
+fakeVM_Interrupter::FakeVM_Interrupter() {
+    memset(interruptFuncs, 0, sizeof(vm_call)*255);
 }
 
-void FakeVM_Interrupter::SetInt(vm_ptr func, unsigned char id) {
-    interruptFuncs[id] = func;
+void fakeVM_Interrupter::SetInt(vm_call func, unsigned char id) {
+    if((id == 0) || (id > 255))
+        return;
+    interruptFuncs[id-1] = func;
 }
 
-vm_ptr FakeVM_Interrupter::Int(unsigned char id) {
-    return interruptFuncs[id];
+void fakeVM_Interrupter::Int(unsigned char id, fakeVM_memory *mem) {
+    if((id == 0) || (id > 255))
+        return;
+    if(interruptFuncs[id-1])
+        interruptFuncs[id-1](mem);
 }
 
 #endif //FAKE_VM_INTERRUPT_H

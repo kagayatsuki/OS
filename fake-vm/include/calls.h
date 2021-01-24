@@ -77,9 +77,6 @@ void vm_call_memcpy(fakeVM_memory *mem, uint16_t seg, uint16_t offset, void* src
     }
 }
 
-void vm_call_func(fakeVM_memory *mem){
 
-
-}
 
 #endif //FAKE_VM_CALLS_H
