@@ -97,13 +97,13 @@ void fakeVM_runner::_CodeExplain(unsigned char code_t, Code_Conf conf) {
                     code_off += 0x0002 + sizeof(uint32_t);
                 } else if (conf.operatorA_register) {  //操作数是寄存器   此模式下,operatorSize的后2位记录寄存器id,前2位记录间接寻址时的操作字节数(上限3)
                     if (conf.operatorB_addressing) {  //间接寻址
-                        ParamSeg = ((uint16_t) thisRegister.X[(conf.operatorSize & 0x02)] >> 0x10) & 0xFFFF; //前两个字节是段参数
-                        ParamOff = ((uint16_t) thisRegister.X[(conf.operatorSize & 2)] & 0xFFFF);    //后两个字节是偏移参数
-                        thisMemory->gets(ParamSeg + exi_m->data_seg, ParamOff, (conf.operatorSize >> 0x02),
+                        ParamSeg = ((uint16_t) thisRegister.X[(conf.operatorSize & 0x03)] >> 0x10) & 0xFFFF; //前两个字节是段参数
+                        ParamOff = ((uint16_t) thisRegister.X[(conf.operatorSize & 0x03)] & 0xFFFF);    //后两个字节是偏移参数
+                        thisMemory->gets(ParamSeg + exi_m->data_seg, ParamOff, (conf.operatorSize >> 0x02) + 0x0001,
                                          uniBuffer + uniBuffer_used);
-                        thisMemory->push((conf.operatorSize >> 0x02), uniBuffer + uniBuffer_used);  //间接寻址数据压栈
+                        thisMemory->push((conf.operatorSize >> 0x02) + 0x0001, uniBuffer + uniBuffer_used);  //间接寻址数据压栈
                     } else {
-                        thisMemory->push(sizeof(unsigned int), &thisRegister.X[(conf.operatorSize & 0x02)]); //寄存器数据压栈
+                        thisMemory->push(sizeof(uint32_t), &thisRegister.X[(conf.operatorSize & 0x02)]); //寄存器数据压栈
                     }
                     code_off += 0x0002;
                 } else {  //操作数是立即数
@@ -115,7 +115,32 @@ void fakeVM_runner::_CodeExplain(unsigned char code_t, Code_Conf conf) {
                 break;
             }
             case 0x11:{     //pop
-
+                thisMemory->addr(ParamSeg, ParamOff, thisRegister.code_ptr + 0x0002);
+                if(conf.operatorA_register){        //向寄存器pop
+                    if(conf.operatorA_addressing){      //间接寻址
+                        ParamSeg = (uint16_t)(thisRegister.X[(conf.operatorSize & 0x03)] >> 0x10);
+                        ParamOff = (uint16_t)(thisRegister.X[(conf.operatorSize & 0x03)] & 0xFFFF);
+                        ParamTemp = new char[(conf.operatorSize >> 0x02) + 1];
+                        thisMemory->pop((conf.operatorSize >> 0x02) + 1, ParamTemp);
+                        vm_call_memcpy_ex(thisMemory, ParamSeg, ParamOff, ParamTemp, (conf.operatorSize >> 0x02) + 1);
+                        delete [] ParamTemp;
+                    }else { //向寄存器
+                        thisMemory->pop(sizeof(uint32_t), &thisRegister.X[(conf.operatorSize & 0x03)]);
+                    }
+                    code_off += 0x0002;
+                }else if(conf.operatorA_addressing){    //寻址
+                    ParamTemp = new char[conf.operatorSize];
+                    thisMemory->pop(conf.operatorSize, ParamTemp);
+                    thisMemory->gets(ParamSeg, ParamOff, sizeof(uint16_t), &Param16A);  //段参数
+                    thisMemory->addr(ParamSeg, ParamOff, thisRegister.code_ptr + 0x0004);
+                    thisMemory->gets(ParamSeg, ParamOff, sizeof(uint16_t), &Param16B);  //偏移参数
+                    vm_call_memcpy_ex(thisMemory, Param16A, Param16B, ParamTemp, conf.operatorSize);
+                    delete [] ParamTemp;
+                    code_off += 0x0006;
+                }else{
+                    thisMemory->pop(conf.operatorSize, NULL);
+                    code_off += 0x0002;
+                }
                 break;
             }
             default:
