@@ -14,6 +14,15 @@
 
 #define VM_UNIBUFFER_SIZE 0x1000
 
+#define CD_RUNNER if(runner_debug_print)
+
+static bool runner_debug_print = true;
+
+/** 输出指令配置详情 **/
+void debug_print_opConf(Code_Conf conf){
+    printf("AReg: %1d BReg: %1d AAdr: %1d BAdr: %1d OpSize: %d", conf.operatorA_register, conf.operatorB_register, conf.operatorA_addressing, conf.operatorB_addressing, conf.operatorSize);
+}
+
 class fakeVM_runner{
     fakeVM_memory *thisMemory;
     fakeVM_Interrupter *thisIntList;
@@ -48,13 +57,18 @@ public:
     bool LaunchEntry();
 };
 
+//暂时还想不到什么办法把解释器的代码更好的精简或模块化
 void fakeVM_runner::_CodeExplain(unsigned char code_t, Code_Conf conf) {
     unsigned char Param8A = 0, Param8B = 0;
     uint16_t Param16A = 0, Param16B = 0;
     uint32_t Param32A = 0, Param32B = 0;
     uint16_t ParamSeg = 0, ParamOff = 0;
     char *ParamTemp = 0;
-    CC_DEBUG printf("[runner 0x%02x] op_size: %d\n", code_t, conf.operatorSize);
+    CC_DEBUG printf("[runner 0x%02x] op_size: %d op_conf: ", code_t, conf.operatorSize);
+    CC_DEBUG debug_print_bin(conf);
+    CC_DEBUG putchar(' ');
+    CD_RUNNER debug_print_opConf(conf);
+    CC_DEBUG putchar('\n');
     if(code_t == 32){   //Int
         thisMemory->addr(ParamSeg, ParamOff, thisRegister.code_ptr + 0x0002);   //获取中断编号
         thisMemory->gets(ParamSeg, ParamOff, sizeof(unsigned char), &Param8A);
@@ -70,8 +84,7 @@ void fakeVM_runner::_CodeExplain(unsigned char code_t, Code_Conf conf) {
     }else{
         uint32_t code_off = 0;
         switch (code_t) {
-            case 0x10:  //push
-            {
+            case 0x10:{     //push
                 ParamTemp = new char[conf.operatorSize];    //临时内存
                 thisMemory->addr(ParamSeg, ParamOff, thisRegister.code_ptr + 0x0002);   //首个操作数必然从指令地址+2处开始
                 if (conf.operatorA_addressing) {  //操作数是地址
@@ -99,14 +112,19 @@ void fakeVM_runner::_CodeExplain(unsigned char code_t, Code_Conf conf) {
                     code_off += 0x0002 + conf.operatorSize;
                 }
                 delete[] ParamTemp;
-                _CodePosition(thisRegister.code_ptr + code_off);
-                return;
+                break;
+            }
+            case 0x11:{     //pop
+
+                break;
             }
             default:
                 Running = 0;
                 ExitCode = -9999;
                 return;
         }
+        _CodePosition(thisRegister.code_ptr + code_off);
+        return;
     }
 }
 
@@ -117,8 +135,8 @@ void fakeVM_runner::_CodePosition(uint32_t offset) {
 void fakeVM_runner::_MainThread() {
     thisRegister.code_ptr = exi_l->entry_code;
     Running = 1;
-    uint16_t run_seg = 0, run_ptr = thisRegister.code_ptr;  //代码段&偏移
-    uint16_t conf_seg = 0, conf_ptr = 1;        //代码配置段&偏移
+    uint16_t run_seg = 0, run_ptr = thisRegister.code_ptr;              //代码段&偏移
+    uint16_t conf_seg = 0, conf_ptr = thisRegister.code_ptr + 1;        //代码配置段&偏移
     unsigned char code_t = 0;
     Code_Conf conf_t;
     while (Running){

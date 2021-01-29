@@ -8,6 +8,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "type.h"
 #include "memory.h"
 
 void vm_call_print(void *mem_p){
@@ -79,6 +80,18 @@ void vm_call_memcpy_ex(fakeVM_memory *mem, uint16_t seg, uint16_t offset, void* 
     }
 }
 
+void debug_print_bin(char dat){
+    for(int i = 0; i < 8; i++){
+        putchar('0' + ((dat >> (7 - i)) & 0x01));
+    }
+}
 
+void debug_print_bin(Code_Conf dat){
+    char tmp;
+    memcpy(&tmp, &dat, 1);
+    for(int i = 0; i < 8; i++){
+        putchar('0' + ((tmp >> (7 - i)) & 0x01));
+    }
+}
 
 #endif //FAKE_VM_CALLS_H
