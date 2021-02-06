@@ -28,7 +28,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0df593ab-be7c-415e-b341-0a98a0061055" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/include/runner_com.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/include/memdebug.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/include/memdebug.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/include/runner.h" beforeDir="false" afterPath="$PROJECT_DIR$/include/runner.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -62,9 +64,9 @@
     </key>
   </component>
   <component name="RunManager">
-    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true">
+    <configuration default="true" type="GradleAppRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true">
       <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+        <option name="com.jetbrains.cidr.cpp.gradle.execution.GradleNativeBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
   </component>
@@ -96,6 +98,7 @@
       <workItem from="1611240039894" duration="2460000" />
       <workItem from="1611476060253" duration="15495000" />
       <workItem from="1611918350306" duration="6353000" />
+      <workItem from="1612591799076" duration="12316000" />
     </task>
     <servers />
   </component>

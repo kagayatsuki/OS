@@ -11,6 +11,7 @@
 #include "interrupt.h"
 #include "permissions.h"
 #include "type.h"
+#include "runner_com.h"
 
 #define VM_UNIBUFFER_SIZE 0x1000
 
@@ -28,7 +29,7 @@ class fakeVM_runner{
     fakeVM_Interrupter *thisIntList;
     RuntimePermission *thisPermission;
 
-    void _CodeExplain(unsigned char code_t, Code_Conf conf);
+    void _CodeExplain(unsigned char code_t, Code_Conf conf, VMCache *ComCache);
     void _CodePosition(uint32_t offset);
 
     void _ThreadDestroy();
@@ -46,6 +47,8 @@ protected:
 
     Runtime_register thisRegister;  //模拟寄存器
 
+    VMCache mainCache;   //主线程下的参数段&偏移缓存变量
+
     int Running, ExitCode; //运行状态指示器, 退出码
     int InitError;
 public:
@@ -58,94 +61,39 @@ public:
 };
 
 //暂时还想不到什么办法把解释器的代码更好的精简或模块化
-void fakeVM_runner::_CodeExplain(unsigned char code_t, Code_Conf conf) {
-    unsigned char Param8A = 0, Param8B = 0;
-    uint16_t Param16A = 0, Param16B = 0;
-    uint32_t Param32A = 0, Param32B = 0;
-    uint16_t ParamSeg = 0, ParamOff = 0;
-    char *ParamTemp = 0;
+void fakeVM_runner::_CodeExplain(unsigned char code_t, Code_Conf conf, VMCache *ComCache) {
+    /** Debug 信息 **/
     CC_DEBUG printf("[runner 0x%02x] op_size: %d op_conf: ", code_t, conf.operatorSize);
     CC_DEBUG debug_print_bin(conf);
     CC_DEBUG putchar(' ');
     CD_RUNNER debug_print_opConf(conf);
     CC_DEBUG putchar('\n');
+
+    /** 指令解释 **/
     if(code_t == 32){   //Int
-        thisMemory->addr(ParamSeg, ParamOff, thisRegister.code_ptr + 0x0002);   //获取中断编号
-        thisMemory->gets(ParamSeg, ParamOff, sizeof(unsigned char), &Param8A);
-        if(Param8A == 0){  //Int 0 退出程序
-            thisMemory->pop(sizeof(uint32_t), &Param32B);   //弹出退出代码
+        thisMemory->addr(ComCache->ParamSeg, ComCache->ParamOff, thisRegister.code_ptr + 0x0002);   //获取中断编号
+        thisMemory->gets(ComCache->ParamSeg, ComCache->ParamOff, sizeof(unsigned char), &ComCache->Param8A);
+        if(ComCache->Param8A == 0){  //Int 0 退出程序
+            thisMemory->pop(sizeof(uint32_t), &ComCache->Param32B);   //弹出退出代码
             Running = 0;
-            ExitCode = Param32B;
+            ExitCode = ComCache->Param32B;
             return;
         }
-        thisIntList->Int(Param8A, thisMemory);
+        thisIntList->Int(ComCache->Param8A, thisMemory);
         _CodePosition(thisRegister.code_ptr + 0x0003);
         return;
     }else{
         uint32_t code_off = 0;
         switch (code_t) {
-            case 0x10:{     //push
-                ParamTemp = new char[conf.operatorSize];    //临时内存
-                thisMemory->addr(ParamSeg, ParamOff, thisRegister.code_ptr + 0x0002);   //首个操作数必然从指令地址+2处开始
-                if (conf.operatorA_addressing) {  //操作数是地址
-                    thisMemory->gets(ParamSeg, ParamOff, sizeof(uint16_t), &Param16A);  //段参数
-                    thisMemory->addr(ParamSeg, ParamOff, thisRegister.code_ptr + 0x0004);
-                    thisMemory->gets(ParamSeg, ParamOff, sizeof(uint16_t), &Param16B);  //偏移参数
-                    thisMemory->gets(Param16A + exi_m->data_seg, Param16B, conf.operatorSize,
-                                     ParamTemp); //寻址(基址为data_seg) 得数据至临时内存
-                    thisMemory->push(conf.operatorSize, ParamTemp); //寻址数据压栈
-                    code_off += 0x0002 + sizeof(uint32_t);
-                } else if (conf.operatorA_register) {  //操作数是寄存器   此模式下,operatorSize的后2位记录寄存器id,前2位记录间接寻址时的操作字节数(上限3)
-                    if (conf.operatorB_addressing) {  //间接寻址
-                        ParamSeg = ((uint16_t) thisRegister.X[(conf.operatorSize & 0x03)] >> 0x10) & 0xFFFF; //前两个字节是段参数
-                        ParamOff = ((uint16_t) thisRegister.X[(conf.operatorSize & 0x03)] & 0xFFFF);    //后两个字节是偏移参数
-                        thisMemory->gets(ParamSeg + exi_m->data_seg, ParamOff, (conf.operatorSize >> 0x02) + 0x0001,
-                                         uniBuffer + uniBuffer_used);
-                        thisMemory->push((conf.operatorSize >> 0x02) + 0x0001, uniBuffer + uniBuffer_used);  //间接寻址数据压栈
-                    } else {
-                        thisMemory->push(sizeof(uint32_t), &thisRegister.X[(conf.operatorSize & 0x02)]); //寄存器数据压栈
-                    }
-                    code_off += 0x0002;
-                } else {  //操作数是立即数
-                    thisMemory->gets(ParamSeg, ParamOff, conf.operatorSize, ParamTemp);     //获取立即数
-                    thisMemory->push(conf.operatorSize, ParamTemp); //立即数压栈
-                    code_off += 0x0002 + conf.operatorSize;
-                }
-                delete[] ParamTemp;
+            case 0x10:     //push
+                code_off = _com_push(ComCache, conf);
                 break;
-            }
-            case 0x11:{     //pop
-                thisMemory->addr(ParamSeg, ParamOff, thisRegister.code_ptr + 0x0002);
-                if(conf.operatorA_register){        //向寄存器pop
-                    if(conf.operatorA_addressing){      //间接寻址
-                        ParamSeg = (uint16_t)(thisRegister.X[(conf.operatorSize & 0x03)] >> 0x10);
-                        ParamOff = (uint16_t)(thisRegister.X[(conf.operatorSize & 0x03)] & 0xFFFF);
-                        ParamTemp = new char[(conf.operatorSize >> 0x02) + 1];
-                        thisMemory->pop((conf.operatorSize >> 0x02) + 1, ParamTemp);
-                        vm_call_memcpy_ex(thisMemory, ParamSeg, ParamOff, ParamTemp, (conf.operatorSize >> 0x02) + 1);
-                        delete [] ParamTemp;
-                    }else { //向寄存器
-                        thisMemory->pop(sizeof(uint32_t), &thisRegister.X[(conf.operatorSize & 0x03)]);
-                    }
-                    code_off += 0x0002;
-                }else if(conf.operatorA_addressing){    //寻址
-                    ParamTemp = new char[conf.operatorSize];
-                    thisMemory->pop(conf.operatorSize, ParamTemp);
-                    thisMemory->gets(ParamSeg, ParamOff, sizeof(uint16_t), &Param16A);  //段参数
-                    thisMemory->addr(ParamSeg, ParamOff, thisRegister.code_ptr + 0x0004);
-                    thisMemory->gets(ParamSeg, ParamOff, sizeof(uint16_t), &Param16B);  //偏移参数
-                    vm_call_memcpy_ex(thisMemory, Param16A, Param16B, ParamTemp, conf.operatorSize);
-                    delete [] ParamTemp;
-                    code_off += 0x0006;
-                }else{
-                    thisMemory->pop(conf.operatorSize, NULL);
-                    code_off += 0x0002;
-                }
+            case 0x11:     //pop
+                code_off = _com_pop(ComCache, conf);
                 break;
-            }
             default:
                 Running = 0;
-                ExitCode = -9999;
+                ExitCode = -329602;
                 return;
         }
         _CodePosition(thisRegister.code_ptr + code_off);
@@ -163,12 +111,19 @@ void fakeVM_runner::_MainThread() {
     uint16_t run_seg = 0, run_ptr = thisRegister.code_ptr;              //代码段&偏移
     uint16_t conf_seg = 0, conf_ptr = thisRegister.code_ptr + 1;        //代码配置段&偏移
     unsigned char code_t = 0;
+    /** mainCache 初始化 **/
+    memset(&mainCache, 0, sizeof(VMCache));
+    mainCache.reg = &thisRegister;
+    mainCache.memEXI = exi_m;
+    mainCache.localEXI = exi_l;
+    mainCache.mem = thisMemory;
+
     Code_Conf conf_t;
     while (Running){
         code_t = thisMemory->get(conf_seg, conf_ptr);   //获取代码配置
         memcpy(&conf_t, &code_t, sizeof(unsigned char));
         code_t = thisMemory->get(run_seg, run_ptr);     //获取代码
-        _CodeExplain(code_t, conf_t);   //处理代码
+        _CodeExplain(code_t, conf_t, &mainCache);   //处理代码
         thisMemory->addr(run_seg, run_ptr, thisRegister.code_ptr);
         thisMemory->addr(conf_seg, conf_ptr, thisRegister.code_ptr + 1);
     }
