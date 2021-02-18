@@ -91,6 +91,9 @@ void fakeVM_runner::_CodeExplain(unsigned char code_t, Code_Conf conf, VMCache *
             case 0x11:     //pop
                 code_off = _com_pop(ComCache, conf);
                 break;
+            case 0x12:
+                code_off = _com_mv(ComCache, conf);
+                break;
             default:
                 Running = 0;
                 ExitCode = -329602;

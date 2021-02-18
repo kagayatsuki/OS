@@ -53,24 +53,31 @@ int main(){
     */
     memory_debug_print = false;
     runner_debug_print = false;
-    unsigned char testCode[128] = {0x10, 0x01, 0x0D, 0x00,              //PUSH  0x000D      复制长度
+    unsigned char testCode[128] = {0x10, 0x01, 0x26, 0x00,              //PUSH  0x000D      复制长度
                                   0x10, 0x01, 0x01, 0x00,               //PUSH  0x0001      字符串段入栈
                                   0x10, 0x01, 0x00, 0x00,               //PUSH  0x0000      字符串偏移入栈
                                   0x10, 0x01, 0x01, 0x00,               //PUSH  0x0001      复制目标段入栈
-                                  0x10, 0x01, 0x0D, 0x00,               //PUSH  0x000D      复制目标偏移入栈
+                                  0x10, 0x01, 0x26, 0x00,               //PUSH  0x000D      复制目标偏移入栈
+                                  0x11, 0x13,                           //POP   EAX         测试pop 寄存器
+                                  0x10, 0x13,                           //PUSH  EAX         测试push 寄存器
                                   0x20, 0x00, 0x02,                     //INT   0x02        中断0x02 内存复制
                                   0x10, 0x01, 0x01, 0x00,               //PUSH  0x0001      字符串段入栈
                                   0x10, 0x01, 0x00, 0x00,               //PUSH  0x0000      字符串偏移入栈
                                   0x20, 0x00, 0x01,                     //INT   0x01        中断0x01 输出栈中参数所指字符串
                                   0x10, 0x01, 0x01, 0x00,               //PUSH  0x0001      复制的字符串段入栈
-                                  0x10, 0x01, 0x0D, 0x00,               //PUSH  0x000D      复制的字符串偏移入栈
+                                  0x10, 0x01, 0x26, 0x00,               //PUSH  0x000D      复制的字符串偏移入栈
                                   0x20, 0x00, 0x01,                     //INT   0x01        中断0x01 输出栈中参数所指字符串
                                   0x10, 0x03, 0x00, 0x00, 0x00, 0x00,   //PUSH  0x00000000  return 0
                                   0x20, 0x00, 0x00,                     //INT   0x00        中断0x00 程序终止
-                                  'H', 'E', 'L', 'L', 'O', ' ', 'W', 'O', 'R', 'L', 'D', '\n', '\0'};   //数据段 0x0014起
-    fakeVM_runner Runner(testCode, 0x0000, 0x0036, 0x000D);
+                                  'H', 'e', 'l', 'l', 'o', ' ', 'W',
+                                  'o', 'r', 'l', 'd', '.', 'T', 'h',
+                                  'i', 's', ' ', 'i', 's', ' ', 'a',
+                                  ' ', 's', 'i', 'm', 'p', 'l', 'e',
+                                  ' ', 'p', 'r', 'o', 'g', 'r', 'a',
+                                  'm', '\n', '\0'};   //数据段 0x0014起
+    fakeVM_runner Runner(testCode, 0x0000, 0x003A, 0x0026);
     if(Runner.LaunchEntry()){
-        printf("done.\n");
+        //printf("done.\n");
     } else{
         printf("failed.\n");
     }

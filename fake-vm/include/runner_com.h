@@ -12,6 +12,7 @@
 
 #define VM_MEM_P fakeVM_memory *
 
+
 typedef struct vm_paramSegment{
     unsigned char Param8A, Param8B;     //8位的缓冲区
     uint16_t Param16A, Param16B;        //16位缓冲区
@@ -38,7 +39,7 @@ uint16_t _com_push(VMCache *thisCache, Code_Conf conf){
             thisCache->mem->gets(thisCache->ParamSeg + thisCache->memEXI->data_seg, thisCache->ParamOff, conf.operatorSize + 0x01, ParamTemp);
             thisCache->mem->push(conf.operatorSize + 0x01, ParamTemp);  //间接寻址数据压栈
         } else {
-            thisCache->mem->push(sizeof(uint32_t), &thisCache->reg->X[opId]); //寄存器数据压栈
+            thisCache->mem->push(conf.operatorSize + 0x01, &thisCache->reg->X[opId]); //寄存器数据压栈
         }
     } else if (conf.operatorA_addressing) {  //操作数是地址,直接寻址取数据
         thisCache->mem->gets(thisCache->ParamSeg, thisCache->ParamOff, sizeof(uint16_t), &thisCache->Param16A);  //push 寻址段参数
@@ -69,7 +70,7 @@ uint16_t _com_pop(VMCache *thisCache, Code_Conf conf){
             thisCache->mem->pop(conf.operatorSize + 0x01, ParamTemp);
             vm_call_memcpy_ex(thisCache->mem, thisCache->ParamSeg, thisCache->ParamOff, ParamTemp, conf.operatorSize + 0x01);
         }else { //向寄存器
-            thisCache->mem->pop(sizeof(uint32_t), &thisCache->reg->X[opId]);
+            thisCache->mem->pop(conf.operatorSize + 0x01, &thisCache->reg->X[opId]);
         }
     }else if(conf.operatorA_addressing){    //直接寻址
         thisCache->mem->pop(conf.operatorSize + 0x01, ParamTemp);
@@ -80,6 +81,39 @@ uint16_t _com_pop(VMCache *thisCache, Code_Conf conf){
         code_offset += 0x0004;
     }
     delete [] ParamTemp;
+    return code_offset;
+}
+
+uint16_t _com_mv(VMCache *thisCache, Code_Conf conf){
+    uint16_t code_offset = 0x0002;
+    /** 此命令作用立即数复制向寄存器/从寄存器复制到内存/寄存器复制到寄存器
+     *  不可从内存复制到内存
+     *  操作大小有三种: 8/16/32 位 即 1/2/4字节
+     *  对于小于32位的操作，从寄存器最低位开始操作
+    **************************************************/
+    char temp[4] = {0};
+    uint16_t opSize = (conf.operatorSize & 0x03) + 1;    //操作字节, 记录于operatorSize的低两位
+    uint16_t regId = (conf.operatorSize >> 2) & 0x03;    //寄存器id, 记录于operatorSize的高两位
+    uint16_t reg2Id = opSize - 1;        //若从寄存器复制到寄存器, 则操作字节数为4, 从reg2复制到reg
+    if(opSize == 3) {
+        opSize = 2;     //操作字节只能是1/2/4
+    }
+    thisCache->mem->addr(thisCache->ParamSeg, thisCache->ParamOff, thisCache->reg->code_ptr + 0x02);
+    if(conf.operatorA_register){    //数据复制到寄存器
+        if(conf.operatorB_register){    //寄存器到寄存器
+            thisCache->reg->X[regId] = thisCache->reg->X[reg2Id];
+        }else{      //立即数到寄存器
+            thisCache->mem->gets(thisCache->ParamSeg, thisCache->ParamOff, opSize, temp);
+            memcpy(&thisCache->reg->X[regId], temp, opSize);
+            code_offset += opSize;
+        }
+    }else if(conf.operatorA_addressing){    //寄存器到内存
+        thisCache->mem->gets(thisCache->ParamSeg, thisCache->ParamOff, 0x02, &thisCache->Param16A); //取得内存段
+        thisCache->mem->addr(thisCache->ParamSeg, thisCache->ParamOff, thisCache->reg->code_ptr + 0x04);
+        thisCache->mem->gets(thisCache->ParamSeg, thisCache->ParamOff, 0x02, &thisCache->Param16B); //取得内存偏移
+        vm_call_memcpy_ex(thisCache->mem, thisCache->Param16A, thisCache->Param16B, &thisCache->reg->X[regId], opSize);  //内存复制
+        code_offset += 0x0004;
+    }
     return code_offset;
 }
 
