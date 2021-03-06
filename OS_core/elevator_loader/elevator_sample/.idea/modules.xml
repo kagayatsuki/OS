@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/fake-vm.iml" filepath="$PROJECT_DIR$/.idea/fake-vm.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/elevator_sample.iml" filepath="$PROJECT_DIR$/.idea/elevator_sample.iml" />
     </modules>
   </component>
 </project>

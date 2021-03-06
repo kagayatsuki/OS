@@ -4,6 +4,9 @@ OS_core/toolbox/Release/logcat.exe
 OS_core/toolbox/public/a.exe
 OS_core/sys/log/*
 OS_core/log/server_info.h
+OS_core\elevator_loader\a.exe
+OS_core/elevator_loader/elevator_sample/cmake-build-debug/*
+OS_core\elevator_loader\elevator_sample\libelevator_sample.dll
 fake-vm/include/a.exe
 fake-vm/.idea/*
 fake-vm/simpleUI/a.exe

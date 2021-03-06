@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:git" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
+  <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
+    <generated>
+      <config projectName="elevator_sample" targetName="elevator_sample" />
+    </generated>
+  </component>
+  <component name="CMakeSettings">
+    <configurations>
+      <configuration PROFILE_NAME="Debug" CONFIG_NAME="Debug" />
+    </configurations>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="6e77bd73-c541-48ec-927a-192f8f58833e" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/../.idea/elevator_loader.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../args_struct.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../elevator_loader.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/elevator_sample.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib_evr.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib_evr.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../evr_thread.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../loader_sample.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../shell/lib/envdb/.idea/envdb.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Changelog.md" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Changelog.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../fake-vm/.idea/fake-vm.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../fake-vm/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../fake-vm/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../fake-vm/.idea/workspace.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../fake-vm/include/calls.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../fake-vm/include/interrupt.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../fake-vm/include/memdebug.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../fake-vm/include/memory.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../fake-vm/include/permission_manager.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../fake-vm/include/permissions.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../fake-vm/include/runner.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../fake-vm/include/runner_com.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../fake-vm/include/type.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../fake-vm/simpleUI/debug.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../fake-vm/simpleUI/simple_activity.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../fake-vm/simpleUI/simple_button.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../fake-vm/simpleUI/simple_edit.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../fake-vm/simpleUI/simple_style.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../fake-vm/simpleUI/simple_text.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../fake-vm/simpleUI/simple_unicode.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../fake-vm/simpleUI/simple_view.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../fake-vm/simpleUI/simple_window.h" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ClangdSettings">
+    <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../../.." />
+  </component>
+  <component name="ProjectId" id="1pKlAjVnfqYt6dQaEvVwtILonWu" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="cf.first.check.clang-format" value="false" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.path.for.package.tslint" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="settings.editor.selected.configurable" value="CPPToolchains" />
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="elevator_sample" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="elevator_sample" TARGET_NAME="elevator_sample" CONFIG_NAME="Debug">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="GradleAppRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="com.jetbrains.cidr.cpp.gradle.execution.GradleNativeBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="6e77bd73-c541-48ec-927a-192f8f58833e" name="Default Changelist" comment="" />
+      <created>1614939520636</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1614939520636</updated>
+      <workItem from="1614939521905" duration="2089000" />
+      <workItem from="1615011814233" duration="2899000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="865" y="299" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1614939548031">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="865" y="299" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1614939548031" />
+  </component>
+</project>
