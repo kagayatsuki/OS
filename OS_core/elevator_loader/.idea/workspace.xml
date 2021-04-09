@@ -33,42 +33,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e12e4acd-c88a-4f98-8bc8-c07f72bbf2e6" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/elevator_loader.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/args_struct.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/elevator_loader.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/elevator_sample/.idea/elevator_sample.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/elevator_sample/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/elevator_sample/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/elevator_sample/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/elevator_sample/CMakeLists.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/elevator_sample/lib_evr.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/elevator_sample/lib_evr.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/evr_thread.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/loader_sample.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../shell/lib/envdb/.idea/envdb.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Changelog.md" beforeDir="false" afterPath="$PROJECT_DIR$/../../Changelog.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../fake-vm/.idea/fake-vm.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../fake-vm/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../fake-vm/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../fake-vm/.idea/workspace.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../fake-vm/include/calls.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../fake-vm/include/interrupt.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../fake-vm/include/memdebug.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../fake-vm/include/memory.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../fake-vm/include/permission_manager.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../fake-vm/include/permissions.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../fake-vm/include/runner.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../fake-vm/include/runner_com.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../fake-vm/include/type.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../fake-vm/simpleUI/debug.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../fake-vm/simpleUI/simple_activity.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../fake-vm/simpleUI/simple_button.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../fake-vm/simpleUI/simple_edit.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../fake-vm/simpleUI/simple_style.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../fake-vm/simpleUI/simple_text.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../fake-vm/simpleUI/simple_unicode.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../fake-vm/simpleUI/simple_view.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../fake-vm/simpleUI/simple_window.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../../.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/args_struct.h" beforeDir="false" afterPath="$PROJECT_DIR$/args_struct.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/elevator_loader.h" beforeDir="false" afterPath="$PROJECT_DIR$/elevator_loader.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/elevator_sample/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/elevator_sample/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/elevator_sample/args_struct.h" beforeDir="false" afterPath="$PROJECT_DIR$/elevator_sample/args_struct.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/elevator_sample/lib_evr.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/elevator_sample/lib_evr.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/elevator_sample/libelevator_sample.dll" beforeDir="false" afterPath="$PROJECT_DIR$/elevator_sample/libelevator_sample.dll" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -101,13 +73,6 @@
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="settings.editor.selected.configurable" value="CPPToolchains" />
   </component>
-  <component name="RunManager">
-    <configuration default="true" type="GradleAppRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true">
-      <method v="2">
-        <option name="com.jetbrains.cidr.cpp.gradle.execution.GradleNativeBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -118,7 +83,8 @@
       <updated>1614597815860</updated>
       <workItem from="1614597817022" duration="3152000" />
       <workItem from="1614936820403" duration="3684000" />
-      <workItem from="1615012378874" duration="2938000" />
+      <workItem from="1615012378874" duration="4773000" />
+      <workItem from="1615100254820" duration="121000" />
     </task>
     <servers />
   </component>
@@ -138,9 +104,13 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="846" y="277" key="FileChooserDialogImpl" timestamp="1614939513398">
+    <state x="540" y="176" width="1092" height="715" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1615017758502">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="846" y="277" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1614939513398" />
+    <state x="540" y="176" width="1092" height="715" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1615017758502" />
+    <state x="846" y="277" key="FileChooserDialogImpl" timestamp="1615100372089">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="846" y="277" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1615100372089" />
   </component>
 </project>

@@ -1,3 +1,6 @@
+*.exe
+*.dll
+*.a
 OS_core/Debug/*
 OS_core/.idea/*
 OS_core/toolbox/Release/logcat.exe

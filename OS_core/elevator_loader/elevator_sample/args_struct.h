@@ -30,7 +30,7 @@ typedef struct elevator_arg{
     void *pin;      //未定义具体用途
 }evr_arg;
 
-void printArgs(elevator_arg *arg_s){
+static void printArgs(elevator_arg *arg_s){
     if(arg_s){
         puts("=================Base Func List=================");
         printf("\tsys_printline\t%p\n", arg_s->func_list.sys_printLine);

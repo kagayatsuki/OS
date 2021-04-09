@@ -20,9 +20,9 @@ class evr_loader{
     bool inited;
 public:
     evr_loader();
-    bool init(char *path);
-    bool start(evr_arg *arg);
-    bool uninstall();
+    bool init(char *path);      //初始化evr模块文件
+    bool start(evr_arg *arg);   //执行evr入口函数
+    bool uninstall();           //卸载evr模块
 };
 
 evr_loader::evr_loader()

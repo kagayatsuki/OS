@@ -35,42 +35,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6e77bd73-c541-48ec-927a-192f8f58833e" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../.idea/elevator_loader.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../args_struct.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../elevator_loader.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/elevator_sample.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib_evr.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib_evr.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../evr_thread.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../loader_sample.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../../shell/lib/envdb/.idea/envdb.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Changelog.md" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Changelog.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../fake-vm/.idea/fake-vm.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../fake-vm/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../fake-vm/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../fake-vm/.idea/workspace.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../fake-vm/include/calls.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../fake-vm/include/interrupt.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../fake-vm/include/memdebug.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../fake-vm/include/memory.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../fake-vm/include/permission_manager.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../fake-vm/include/permissions.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../fake-vm/include/runner.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../fake-vm/include/runner_com.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../fake-vm/include/type.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../fake-vm/simpleUI/debug.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../fake-vm/simpleUI/simple_activity.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../fake-vm/simpleUI/simple_button.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../fake-vm/simpleUI/simple_edit.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../fake-vm/simpleUI/simple_style.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../fake-vm/simpleUI/simple_text.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../fake-vm/simpleUI/simple_unicode.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../fake-vm/simpleUI/simple_view.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../fake-vm/simpleUI/simple_window.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../args_struct.h" beforeDir="false" afterPath="$PROJECT_DIR$/../args_struct.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/args_struct.h" beforeDir="false" afterPath="$PROJECT_DIR$/args_struct.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib_evr.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/lib_evr.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -104,11 +73,6 @@
     <property name="settings.editor.selected.configurable" value="CPPToolchains" />
   </component>
   <component name="RunManager">
-    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true">
-      <method v="2">
-        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="elevator_sample" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="elevator_sample" TARGET_NAME="elevator_sample" CONFIG_NAME="Debug">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -130,6 +94,7 @@
       <updated>1614939520636</updated>
       <workItem from="1614939521905" duration="2089000" />
       <workItem from="1615011814233" duration="2899000" />
+      <workItem from="1615016524877" duration="66000" />
     </task>
     <servers />
   </component>

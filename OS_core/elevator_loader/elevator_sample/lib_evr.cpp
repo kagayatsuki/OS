@@ -3,11 +3,11 @@
 
 #include <Windows.h>
 
-elevator_arg *global_arg;
+static elevator_arg *global_arg;
 
-const char *exit_notice = "Sample Module will exit after 10s.";
+static const char *exit_notice = "Sample Module will exit after 10s.";
 
-void print_t(char *text_t){
+static void print_t(char *text_t){
     if(global_arg->func_list.sys_printLine)
         global_arg->func_list.sys_printLine((void *)text_t);
 }
